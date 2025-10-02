@@ -3,80 +3,204 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bac Pro MCV - Réussis ton bac !</title>
+  <title>Le prof de Vente – Bac Pro MCV</title>
   <style>
+    /* --- Réinitialisation basique --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
+      color: #000;
+      background-color: #fff;
       line-height: 1.6;
-      color: #333;
-      background-color: #f9f9f9;
     }
+
+    /* --- HEADER avec image de fond --- */
     header {
-      text-align: center;
-      padding: 30px 0;
-      border-bottom: 2px solid #e0e0e0;
-    }
-    h1 {
-      color: #2c3e50;
-    }
-    nav {
+      position: relative;
+      height: 400px;
+      background-image: url('https://images.unsplash.com/photo-1523381215949-7b1f7c7e9a30?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+      background-size: cover;
+      background-position: center;
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
-      margin: 20px 0;
+      align-items: center;
+      margin-bottom: 20px;
     }
+
+    /* --- Logo circulaire --- */
+    .logo-container {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFA500, #FFD700, #8B4513);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .logo-container img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: white;
+      padding: 8px;
+    }
+
+    .logo-text {
+      text-align: center;
+      margin-top: 12px;
+      font-weight: bold;
+      font-size: 1.4em;
+      color: #FFA500;
+    }
+
+    /* --- Menu de navigation --- */
+    nav {
+      background-color: white;
+      padding: 12px 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      list-style: none;
+      gap: 20px;
+    }
+
     nav a {
       text-decoration: none;
-      background: #3498db;
+      color: black;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background-color: #FFA500;
       color: white;
-      padding: 10px 15px;
-      border-radius: 5px;
-      font-weight: bold;
     }
-    nav a:hover {
-      background: #2980b9;
+
+    /* --- Contenu principal --- */
+    main {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      align-items: center;
     }
-    footer {
-      margin-top: 40px;
+
+    .text-content {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .text-content h2 {
+      color: #FFA500;
+      margin-bottom: 16px;
+      font-size: 2em;
+    }
+
+    .text-content p {
+      margin-bottom: 20px;
+      font-size: 1.1em;
+    }
+
+    .image-content {
+      flex: 1;
+      min-width: 280px;
       text-align: center;
-      color: #7f8c8d;
-      font-size: 0.9em;
+    }
+
+    .image-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* --- Responsive mobile --- */
+    @media (max-width: 768px) {
+      header {
+        height: 300px;
+      }
+      .logo-container {
+        width: 140px;
+        height: 140px;
+      }
+      .logo-container img {
+        width: 100px;
+        height: 100px;
+      }
+      nav ul {
+        gap: 10px;
+      }
+      nav a {
+        font-size: 0.9em;
+        padding: 6px 10px;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- En-tête avec image de fond et logo -->
   <header>
-    <h1>🎓 Bac Pro MCV</h1>
-    <p>Ressources pédagogiques pour les élèves – par un enseignant</p>
+    <div style="text-align: center;">
+      <div class="logo-container">
+        <!-- 🔁 Remplace "logo-prof.png" par ton vrai fichier -->
+        <img src="logo-prof.png" alt="Le prof de Vente">
+      </div>
+      <div class="logo-text">Le prof de Vente</div>
+    </div>
   </header>
 
+  <!-- Menu de navigation -->
   <nav>
-    <a href="mcv.html">Le Bac Pro MCV</a>
-    <a href="referentiel.html">Les 3 pôles</a>
-    <a href="epreuves.html">Épreuves (E31, E32...)</a>
-    <a href="calculs.html">Calculs commerciaux</a>
-    <a href="actu.html">Actualités</a>
-    <a href="https://www.tiktok.com/@tonpseudo">TikTok</a>
+    <ul>
+      <li><a href="index.html" class="active">Accueil</a></li>
+      <li><a href="mcv.html">Le Bac Pro MCV</a></li>
+      <li><a href="referentiel.html">Les 3 pôles</a></li>
+      <li><a href="calculs.html">Calculs commerciaux</a></li>
+      <li><a href="epreuves.html">Les Épreuves</a></li>
+      <li><a href="actu.html">Actualités commerciales</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
   </nav>
 
+  <!-- Contenu principal -->
   <main>
-    <p>Bienvenue sur ce site dédié aux élèves en <strong>Bac Pro Métiers du Commerce et de la Vente</strong> !</p>
-    <p>Tu trouveras ici :</p>
-    <ul>
-      <li>Des fiches de révision claires et synthétiques</li>
-      <li>Des exercices interactifs (calculs, QCM)</li>
-      <li>Des explications sur les épreuves professionnelles</li>
-      <li>Des liens vers mes vidéos TikTok pédagogiques</li>
-    </ul>
-    <p>👉 Utilise le menu ci-dessus pour naviguer !</p>
+    <div class="text-content">
+      <h2>Pourquoi ce site ?</h2>
+      <p>
+        Ce site a été conçu pour accompagner les élèves de <strong>Bac Pro Métiers du Commerce et de la Vente</strong> 
+        dans leur parcours de formation. Vous y trouverez des fiches de révision, des exercices interactifs, 
+        des explications sur les épreuves professionnelles (E31, E32, E33, E2), ainsi que des ressources 
+        actualisées sur le monde du commerce.
+      </p>
+      <p>
+        Complémentaire de ma chaîne TikTok, ce site offre un espace structuré, clair et pédagogique 
+        pour réviser à tout moment.
+      </p>
+    </div>
+    <div class="image-content">
+      <!-- 🔁 Remplace par ton image "jeunes-discutant.jpg" -->
+      <img src="https://images.unsplash.com/photo-1529333165978-62114d647a76?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+           alt="Élèves en discussion">
+    </div>
   </main>
 
-  <footer>
-    <p>© 2025 – Site pédagogique – [Ton nom], enseignant en Bac Pro MCV</p>
-  </footer>
 </body>
 </html>
