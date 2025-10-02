@@ -21,43 +21,44 @@
     /* --- En-tête avec image de fond --- */
     header {
       position: relative;
-      height: 400px;
+      height: 400px; /* Hauteur fixe */
       background-image: url('Bannière%20index.jpg');
       background-size: cover;
       background-position: center;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       margin-bottom: 20px;
     }
 
-    /* --- Logo circulaire --- */
+    /* --- Conteneur du logo : 80% de la hauteur du header = 320px --- */
     .logo-container {
-      width: 180px;
-      height: 180px;
+      width: 320px;
+      height: 320px;
       border-radius: 50%;
       background: linear-gradient(135deg, #FFA500, #FFD700, #8B4513);
       display: flex;
       justify-content: center;
       align-items: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
     }
 
+    /* --- L'image du logo s'adapte sans déformation --- */
     .logo-container img {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      object-fit: cover;
-      background-color: white;
-      padding: 8px;
+      width: 90%;       /* Laisse un petit espace intérieur */
+      height: 90%;
+      object-fit: contain; /* ← Clé : conserve les proportions */
+      background-color: transparent;
     }
 
     .logo-text {
       text-align: center;
-      margin-top: 12px;
+      margin-top: 16px;
       font-weight: bold;
-      font-size: 1.4em;
+      font-size: 1.6em;
       color: #FFA500;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     /* --- Menu de navigation --- */
@@ -130,18 +131,21 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    /* --- Version mobile --- */
+    /* --- Mobile --- */
     @media (max-width: 768px) {
       header {
         height: 300px;
       }
       .logo-container {
-        width: 140px;
-        height: 140px;
+        width: 240px;  /* 80% de 300px */
+        height: 240px;
       }
       .logo-container img {
-        width: 100px;
-        height: 100px;
+        width: 85%;
+        height: 85%;
+      }
+      .logo-text {
+        font-size: 1.3em;
       }
       nav ul {
         gap: 10px;
@@ -150,25 +154,18 @@
         font-size: 0.9em;
         padding: 6px 10px;
       }
-      main {
-        gap: 25px;
-      }
     }
   </style>
 </head>
 <body>
 
-  <!-- En-tête -->
   <header>
-    <div style="text-align: center;">
-      <div class="logo-container">
-        <img src="logo.png" alt="Le prof de Vente">
-      </div>
-      <div class="logo-text">Le prof de Vente</div>
+    <div class="logo-container">
+      <img src="logo.png" alt="Le prof de Vente">
     </div>
+    <div class="logo-text">Le prof de Vente</div>
   </header>
 
-  <!-- Menu -->
   <nav>
     <ul>
       <li><a href="index.html" class="active">Accueil</a></li>
@@ -181,7 +178,6 @@
     </ul>
   </nav>
 
-  <!-- Contenu -->
   <main>
     <div class="text-content">
       <h2>Pourquoi ce site ?</h2>
