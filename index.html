@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Le prof de Vente – Bac Pro MCV</title>
   <style>
-    /* --- Réinitialisation basique --- */
     * {
       margin: 0;
       padding: 0;
@@ -19,11 +18,10 @@
       line-height: 1.6;
     }
 
-    /* --- HEADER avec image de fond --- */
     header {
       position: relative;
       height: 400px;
-      background-image: url('Bannière index');
+      background-image: url('Bannière%20index.jpg');
       background-size: cover;
       background-position: center;
       display: flex;
@@ -32,7 +30,6 @@
       margin-bottom: 20px;
     }
 
-    /* --- Logo circulaire --- */
     .logo-container {
       width: 180px;
       height: 180px;
@@ -61,7 +58,6 @@
       color: #FFA500;
     }
 
-    /* --- Menu de navigation --- */
     nav {
       background-color: white;
       padding: 12px 0;
@@ -91,7 +87,6 @@
       color: white;
     }
 
-    /* --- Contenu principal --- */
     main {
       max-width: 1100px;
       margin: 40px auto;
@@ -131,7 +126,6 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    /* --- Responsive mobile --- */
     @media (max-width: 768px) {
       header {
         height: 300px;
@@ -156,18 +150,15 @@
 </head>
 <body>
 
-  <!-- En-tête avec image de fond et logo -->
   <header>
     <div style="text-align: center;">
       <div class="logo-container">
-        <!-- 🔁 Remplace "logo-prof.png" par ton vrai fichier -->
-        <img src="Le prof de vente" alt="Le prof de vente">
+        <img src="logo.png" alt="Le prof de Vente">
       </div>
       <div class="logo-text">Le prof de Vente</div>
     </div>
   </header>
 
-  <!-- Menu de navigation -->
   <nav>
     <ul>
       <li><a href="index.html" class="active">Accueil</a></li>
@@ -180,7 +171,6 @@
     </ul>
   </nav>
 
-  <!-- Contenu principal -->
   <main>
     <div class="text-content">
       <h2>Pourquoi ce site ?</h2>
@@ -196,9 +186,7 @@
       </p>
     </div>
     <div class="image-content">
-      <!-- 🔁 Remplace par ton image "jeunes-discutant.jpg" -->
-      <img src="etudiants1" 
-           alt="Élèves en discussion">
+      <img src="etudiants1.jpg" alt="Élèves en discussion">
     </div>
   </main>
 
