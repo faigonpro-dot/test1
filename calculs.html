@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculs commerciaux - Bac Pro MCV</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #000;
+      background-color: #fff;
+      line-height: 1.6;
+    }
+
+    /* --- En-tête --- */
+    header {
+      position: relative;
+      height: 400px;
+      background-image: url('assets/images/Bannière%20index.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-container {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFA500, #FFD700, #8B4513);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .logo-container img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+      background-color: transparent;
+    }
+
+    .logo-text {
+      text-align: center;
+      margin-top: 16px;
+      font-weight: bold;
+      font-size: 1.6em;
+      color: #FFA500;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* --- Menu --- */
+    nav {
+      background-color: white;
+      padding: 12px 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      list-style: none;
+      gap: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: black;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background-color: #FFA500;
+      color: white;
+    }
+
+    /* --- Contenu principal --- */
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    main h1 {
+      color: #FFA500;
+      margin-bottom: 30px;
+      font-size: 2.4em;
+    }
+
+    .sections-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .section-card {
+      width: 250px;
+      background: white;
+      border: 2px solid #FFA500;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .section-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .section-card h3 {
+      color: #FFA500;
+      font-size: 1.2em;
+      margin-bottom: 8px;
+    }
+
+    .options-columns {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .option-column {
+      width: 400px;
+      text-align: center;
+    }
+
+    .option-title {
+      font-size: 1.8em;
+      color: #FFA500;
+      margin-bottom: 20px;
+    }
+
+    .topic-card {
+      width: 100%;
+      background: white;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .topic-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .topic-card h3 {
+      color: #2c3e50;
+      font-size: 1.3em;
+      margin-bottom: 8px;
+    }
+
+    .topic-subtitle {
+      font-size: 0.9em;
+      color: #7f8c8d;
+      margin-bottom: 5px;
+    }
+
+    /* --- Mobile --- */
+    @media (max-width: 768px) {
+      header {
+        height: 300px;
+      }
+      .logo-container {
+        width: 240px;
+        height: 240px;
+      }
+      .logo-container img {
+        width: 85%;
+        height: 85%;
+      }
+      .logo-text {
+        font-size: 1.3em;
+      }
+      main h1 {
+        font-size: 2em;
+      }
+      .sections-container {
+        gap: 15px;
+      }
+      .section-card {
+        width: 200px;
+        padding: 12px;
+      }
+      .options-columns {
+        gap: 20px;
+      }
+      .option-column {
+        width: 100%;
+        max-width: 400px;
+      }
+      .topic-card {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- En-tête -->
+  <header>
+    <div class="logo-container">
+      <img src="assets/images/logo.png" alt="Le prof de Vente">
+    </div>
+    <div class="logo-text">Le prof de Vente</div>
+  </header>
+
+  <!-- Menu -->
+  <nav>
+    <ul>
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="mcv.html">Le Bac Pro MCV</a></li>
+      <li><a href="referentiel.html">Les 3 pôles</a></li>
+      <li><a href="optionab.html">Option A & B</a></li>
+      <li><a href="calculs.html" class="active">Calculs commerciaux</a></li>
+      <li><a href="epreuves.html">Les Épreuves</a></li>
+      <li><a href="actu.html">Actualités commerciales</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenu -->
+  <main>
+    <h1>Les calculs commerciaux</h1>
+
+    <!-- Sections principales -->
+    <div class="sections-container">
+      <div class="section-card">
+        <h3>La construction du prix de vente</h3>
+      </div>
+      <div class="section-card">
+        <h3>Les bases de calculs</h3>
+      </div>
+      <div class="section-card">
+        <h3>La gestion de la fidélisation</h3>
+      </div>
+    </div>
+
+    <!-- Colonnes Option A et B -->
+    <div class="options-columns">
+      <!-- Option A -->
+      <div class="option-column">
+        <h2 class="option-title" style="color: #4CAF50;">Option A</h2>
+        <a href="calculs-optiona-lineraire.html" class="topic-card">
+          <h3>La gestion du linéaire</h3>
+          <p class="topic-subtitle">Option A</p>
+        </a>
+        <a href="calculs-optiona-stocks.html" class="topic-card">
+          <h3>La gestion des stocks</h3>
+          <p class="topic-subtitle">Option A</p>
+        </a>
+        <a href="calculs-optiona-prix-psychologique.html" class="topic-card">
+          <h3>Le prix psychologique</h3>
+          <p class="topic-subtitle">Option A</p>
+        </a>
+      </div>
+
+      <!-- Option B -->
+      <div class="option-column">
+        <h2 class="option-title" style="color: #9C27B0;">Option B</h2>
+        <a href="calculs-optionb-prospection.html" class="topic-card">
+          <h3>La gestion de la prospection</h3>
+          <p class="topic-subtitle">Option B</p>
+        </a>
+        <a href="calculs-optionb-remuneration.html" class="topic-card">
+          <h3>La rémunération des commerciaux</h3>
+          <p class="topic-subtitle">Option B</p>
+        </a>
+        <a href="calculs-optionb-rentabilite.html" class="topic-card">
+          <h3>La rentabilité d'une opération commerciale</h3>
+          <p class="topic-subtitle">Option B</p>
+        </a>
+        <a href="calculs-optionb-fdv.html" class="topic-card">
+          <h3>La taille de la Force De Vente (FDV)</h3>
+          <p class="topic-subtitle">Option B</p>
+        </a>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
