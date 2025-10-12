@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Option B : Prospection et Valorisation de l’Offre Commerciale - Bac Pro MCV</title>
+  <style>
+    /* --- Identique à optiona.html --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #000;
+      background-color: #fff;
+      line-height: 1.6;
+    }
+
+    header {
+      position: relative;
+      height: 400px;
+      background-image: url('assets/images/Bannière%20index.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-container {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFA500, #FFD700, #8B4513);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .logo-container img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+      background-color: transparent;
+    }
+
+    .logo-text {
+      text-align: center;
+      margin-top: 16px;
+      font-weight: bold;
+      font-size: 1.6em;
+      color: #FFA500;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    nav {
+      background-color: white;
+      padding: 12px 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      list-style: none;
+      gap: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: black;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background-color: #FFA500;
+      color: white;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    main h1 {
+      color: #FFA500;
+      margin-bottom: 30px;
+      font-size: 2.2em;
+    }
+
+    .cartes-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .carte {
+      width: 200px;
+      background: white;
+      border: 2px solid #FFA500;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .carte:hover {
+      transform: translateY(-5px);
+    }
+
+    .carte img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .carte-content {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .carte-content h3 {
+      font-size: 1.1em;
+      color: #FFA500;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        height: 300px;
+      }
+      .logo-container {
+        width: 240px;
+        height: 240px;
+      }
+      .logo-container img {
+        width: 85%;
+        height: 85%;
+      }
+      .logo-text {
+        font-size: 1.3em;
+      }
+      main h1 {
+        font-size: 1.8em;
+      }
+      .carte {
+        width: 150px;
+      }
+      .carte img {
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- En-tête -->
+  <header>
+    <div class="logo-container">
+      <img src="assets/images/logo.png" alt="Le prof de Vente">
+    </div>
+    <div class="logo-text">Le prof de Vente</div>
+  </header>
+
+  <!-- Menu -->
+  <nav>
+    <ul>
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="mcv.html">Le Bac Pro MCV</a></li>
+      <li><a href="referentiel.html">Les 3 pôles</a></li>
+      <li><a href="optionab.html">Option A & B</a></li>
+      <li><a href="calculs.html">Calculs commerciaux</a></li>
+      <li><a href="epreuves.html">Les Épreuves</a></li>
+      <li><a href="actu.html">Actualités commerciales</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenu -->
+  <main>
+    <h1>Option B : Prospection et Valorisation de l’Offre Commerciale</h1>
+    <div class="cartes-container">
+      <div class="carte">
+        <img src="assets/images/carte-marche.png" alt="La prospection">
+        <div class="carte-content">
+          <h3>La prospection</h3>
+        </div>
+      </div>
+      <div class="carte">
+        <img src="assets/images/carte-types.png" alt="La valorisation">
+        <div class="carte-content">
+          <h3>La valorisation</h3>
+        </div>
+      </div>
+      <div class="carte">
+        <img src="assets/images/carte-zone-challenge.png" alt="Le digital">
+        <div class="carte-content">
+          <h3>Le digital</h3>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
