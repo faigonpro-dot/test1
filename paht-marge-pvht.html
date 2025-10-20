@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prix d'Achat HT - Marge - Prix de Vente HT</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #000;
+      background-color: #fff;
+      line-height: 1.6;
+    }
+
+    /* --- En-tête --- */
+    header {
+      position: relative;
+      height: 400px;
+      background-image: url('assets/images/Bannière%20index.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-container {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFA500, #FFD700, #8B4513);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .logo-container img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+      background-color: transparent;
+    }
+
+    .logo-text {
+      text-align: center;
+      margin-top: 16px;
+      font-weight: bold;
+      font-size: 1.6em;
+      color: #FFA500;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* --- Menu --- */
+    nav {
+      background-color: white;
+      padding: 12px 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      list-style: none;
+      gap: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: black;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background-color: #FFA500;
+      color: white;
+    }
+
+    /* --- Contenu principal --- */
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    main h1 {
+      color: #FFA500;
+      margin-bottom: 20px;
+      font-size: 2.4em;
+    }
+
+    .infographie {
+      margin: 20px auto 40px;
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .infographie img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* --- Styles pour les exercices --- */
+    .pv { color: #800080; font-weight: bold; }     /* Mauve */
+    .marge { color: #008000; font-weight: bold; }  /* Vert */
+    .pa { color: #0000FF; font-weight: bold; }     /* Bleu */
+    .correct-message { color: green; font-weight: bold; }
+    .incorrect-message { color: red; font-weight: bold; }
+
+    .exercise-section {
+      max-width: 800px;
+      margin: 0 auto 40px;
+      text-align: left;
+    }
+
+    .formula {
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+    }
+
+    .formula.pv { background-color: #f3e5f5; border-left: 4px solid #800080; }
+    .formula.marge { background-color: #e8f5e8; border-left: 4px solid #008000; }
+    .formula.pa { background-color: #e3f2fd; border-left: 4px solid #0000FF; }
+
+    .exercise-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .exercise-card h2 {
+      font-size: 1.4em;
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    #exercise-container {
+      background-color: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    #student-answer {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+      margin-bottom: 10px;
+    }
+
+    #check-answer, #new-exercise {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    #check-answer:hover { background-color: #2980b9; }
+    #new-exercise:hover { background-color: #27ae60; }
+
+    #result-container {
+      display: none;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    #result-container.correct-answer { background-color: #d4edda; border: 1px solid #c3e6cb; }
+    #result-container.incorrect-answer { background-color: #f8d7da; border: 1px solid #f5c6cb; }
+
+    .progress-section {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .progress-section h2 {
+      font-size: 1.4em;
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    .progress-bar-container {
+      height: 20px;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    #progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, #3498db, #2c3e50);
+      width: 0%;
+    }
+
+    /* --- Mobile --- */
+    @media (max-width: 768px) {
+      header {
+        height: 300px;
+      }
+      .logo-container {
+        width: 240px;
+        height: 240px;
+      }
+      .logo-container img {
+        width: 85%;
+        height: 85%;
+      }
+      .logo-text {
+        font-size: 1.3em;
+      }
+      main h1 {
+        font-size: 2em;
+      }
+      .exercise-section,
+      .progress-section {
+        padding: 0 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- En-tête -->
+  <header>
+    <div class="logo-container">
+      <img src="assets/images/logo.png" alt="Le prof de Vente">
+    </div>
+    <div class="logo-text">Le prof de Vente</div>
+  </header>
+
+  <!-- Menu -->
+  <nav>
+    <ul>
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="mcv.html">Le Bac Pro MCV</a></li>
+      <li><a href="referentiel.html">Les 3 pôles</a></li>
+      <li><a href="optionab.html">Option A & B</a></li>
+      <li><a href="calculs.html">Calculs commerciaux</a></li>
+      <li><a href="epreuves.html">Les Épreuves</a></li>
+      <li><a href="actu.html">Actualités commerciales</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenu -->
+  <main>
+    <h1>Prix d'Achat HT - Marge - Prix de Vente HT</h1>
+
+    <!-- Infographie -->
+    <div class="infographie">
+      <img src="assets/images/pamargepvht.png" alt="Infographie : Prix d'Achat HT - Marge - Prix de Vente HT">
+    </div>
+
+    <!-- Formules -->
+    <div class="exercise-section">
+      <div class="exercise-card">
+        <h2>Formules à connaître</h2>
+        <div class="formula pv">
+          <p><span class="pv">PV HT</span> = <span class="pa">Prix d'achat</span> + <span class="marge">Marge</span></p>
+        </div>
+        <div class="formula marge">
+          <p><span class="marge">Marge</span> = <span class="pv">PV HT</span> - <span class="pa">Prix d'achat</span></p>
+        </div>
+        <div class="formula pa">
+          <p><span class="pa">Prix d'achat</span> = <span class="pv">PV HT</span> - <span class="marge">Marge</span></p>
+        </div>
+      </div>
+
+      <!-- Exercice interactif -->
+      <div class="exercise-card">
+        <h2>Exercice interactif</h2>
+        <select id="difficulty" class="px-3 py-2 border rounded mb-3">
+          <option value="easy">Facile (nombres entiers)</option>
+          <option value="medium">Moyen (nombres décimaux)</option>
+          <option value="hard">Difficile (nombres décimaux)</option>
+        </select>
+        <div id="exercise-container">
+          <p id="exercise-text" class="mb-2"></p>
+          <input type="number" id="student-answer" placeholder="Votre réponse" step="0.01">
+          <button id="check-answer">Vérifier</button>
+          <p id="input-hint" class="text-xs text-gray-500 mt-1 italic"></p>
+        </div>
+        <div id="result-container">
+          <p id="result-text"></p>
+          <div id="correction-details" class="mt-2"></div>
+        </div>
+        <button id="new-exercise">Nouvel exercice</button>
+      </div>
+
+      <!-- Progression -->
+      <div class="progress-section">
+        <h2>Votre progression</h2>
+        <div class="progress-bar-container">
+          <div id="progress-bar"></div>
+        </div>
+        <div class="flex justify-between text-sm">
+          <p>Exercices réussis: <span id="correct-count">0</span></p>
+          <p>Exercices tentés: <span id="total-count">0</span></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Script JS -->
+  <script>
+    // Variables to track progress
+    let correctAnswers = 0;
+    let totalAttempts = 0;
+
+    // Current exercise data
+    let currentExercise = {
+        type: null,
+        prixAchat: 0,
+        marge: 0,
+        pvHT: 0,
+        answer: 0,
+        useDecimals: false
+    };
+
+    function formatCurrency(number, useDecimals) {
+        return useDecimals ? number.toFixed(2) + '€' : number.toFixed(0) + '€';
+    }
+
+    function getRandomNumber(min, max, useDecimals = false) {
+        const num = Math.random() * (max - min) + min;
+        return useDecimals ? Number(num.toFixed(2)) : Math.round(num);
+    }
+
+    function updateInputHint(useDecimals) {
+        const inputHint = document.getElementById('input-hint');
+        if (useDecimals) {
+            inputHint.textContent = "Entrez votre réponse avec 2 chiffres après la virgule (ex: 45.75)";
+            document.getElementById('student-answer').setAttribute('step', '0.01');
+        } else {
+            inputHint.textContent = "Entrez votre réponse (nombres entiers)";
+            document.getElementById('student-answer').setAttribute('step', '1');
+        }
+    }
+
+    function generateExercise() {
+        const difficulty = document.getElementById('difficulty').value;
+        const exerciseType = Math.floor(Math.random() * 3); // 0, 1, or 2
+        let prixAchat, marge, pvHT;
+        let useDecimals = difficulty !== 'easy';
+
+        let minPA, maxPA, minMargePercent, maxMargePercent;
+        switch(difficulty) {
+            case 'easy':
+                minPA = 50;
+                maxPA = 200;
+                minMargePercent = 20;
+                maxMargePercent = 40;
+                break;
+            case 'medium':
+                minPA = 100;
+                maxPA = 500;
+                minMargePercent = 15;
+                maxMargePercent = 45;
+                break;
+            case 'hard':
+                minPA = 200;
+                maxPA = 1000;
+                minMargePercent = 10;
+                maxMargePercent = 50;
+                break;
+        }
+
+        prixAchat = getRandomNumber(minPA, maxPA, useDecimals);
+        const margePercent = getRandomNumber(minMargePercent, maxMargePercent) / 100;
+        if (useDecimals) {
+            marge = Number((prixAchat * margePercent).toFixed(2));
+            pvHT = Number((prixAchat + marge).toFixed(2));
+        } else {
+            marge = Math.round(prixAchat * margePercent);
+            pvHT = prixAchat + marge;
+        }
+
+        let exerciseText = '';
+        let answer = 0;
+
+        switch(exerciseType) {
+            case 0:
+                exerciseText = `Un produit a un prix d'achat de ${formatCurrency(prixAchat, useDecimals)} et une marge de ${formatCurrency(marge, useDecimals)}. Calculez le prix de vente HT.`;
+                answer = pvHT;
+                break;
+            case 1:
+                exerciseText = `Un produit a un prix d'achat de ${formatCurrency(prixAchat, useDecimals)} et un prix de vente HT de ${formatCurrency(pvHT, useDecimals)}. Calculez la marge.`;
+                answer = marge;
+                break;
+            case 2:
+                exerciseText = `Un produit a un prix de vente HT de ${formatCurrency(pvHT, useDecimals)} et une marge de ${formatCurrency(marge, useDecimals)}. Calculez le prix d'achat.`;
+                answer = prixAchat;
+                break;
+        }
+
+        currentExercise = {
+            type: exerciseType,
+            prixAchat,
+            marge,
+            pvHT,
+            answer,
+            useDecimals
+        };
+
+        document.getElementById('exercise-text').textContent = exerciseText;
+        document.getElementById('student-answer').value = '';
+        document.getElementById('result-container').style.display = 'none';
+        updateInputHint(useDecimals);
+    }
+
+    function generateCorrectionDetails() {
+        const { type, prixAchat, marge, pvHT, useDecimals } = currentExercise;
+        let correctionText = '';
+        switch(type) {
+            case 0:
+                correctionText = `
+                    <p>PV HT = Prix d'achat + Marge</p>
+                    <p>PV HT = ${formatCurrency(prixAchat, useDecimals)} + ${formatCurrency(marge, useDecimals)}</p>
+                    <p><strong>PV HT = ${formatCurrency(pvHT, useDecimals)}</strong></p>
+                `;
+                break;
+            case 1:
+                correctionText = `
+                    <p>Marge = PV HT - Prix d'achat</p>
+                    <p>Marge = ${formatCurrency(pvHT, useDecimals)} - ${formatCurrency(prixAchat, useDecimals)}</p>
+                    <p><strong>Marge = ${formatCurrency(marge, useDecimals)}</strong></p>
+                `;
+                break;
+            case 2:
+                correctionText = `
+                    <p>Prix d'achat = PV HT - Marge</p>
+                    <p>Prix d'achat = ${formatCurrency(pvHT, useDecimals)} - ${formatCurrency(marge, useDecimals)}</p>
+                    <p><strong>Prix d'achat = ${formatCurrency(prixAchat, useDecimals)}</strong></p>
+                `;
+                break;
+        }
+        return correctionText;
+    }
+
+    function checkAnswer() {
+        const studentAnswerInput = document.getElementById('student-answer').value;
+        const resultContainer = document.getElementById('result-container');
+        const resultText = document.getElementById('result-text');
+        const correctionDetails = document.getElementById('correction-details');
+
+        if (studentAnswerInput === '') {
+            alert("Veuillez entrer une réponse numérique.");
+            return;
+        }
+
+        const studentAnswer = parseFloat(studentAnswerInput);
+        totalAttempts++;
+
+        resultContainer.style.display = 'block';
+
+        const correctionText = generateCorrectionDetails();
+        const tolerance = currentExercise.useDecimals ? 0.01 : 0.5;
+
+        if (Math.abs(studentAnswer - currentExercise.answer) < tolerance) {
+            resultContainer.className = 'correct-answer';
+            resultText.innerHTML = "<span class='correct-message'>Bravo ! Votre réponse est correcte.</span>";
+            correctAnswers++;
+        } else {
+            resultContainer.className = 'incorrect-answer';
+            resultText.innerHTML = "<span class='incorrect-message'>Votre réponse est incorrecte.</span> Voici la correction :";
+        }
+
+        correctionDetails.innerHTML = correctionText;
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const progressBar = document.getElementById('progress-bar');
+        const correctCount = document.getElementById('correct-count');
+        const totalCount = document.getElementById('total-count');
+        const progressPercentage = totalAttempts > 0 ? Math.round((correctAnswers / totalAttempts) * 100) : 0;
+        progressBar.style.width = `${progressPercentage}%`;
+        correctCount.textContent = correctAnswers;
+        totalCount.textContent = totalAttempts;
+    }
+
+    // Event listeners
+    document.getElementById('check-answer').addEventListener('click', checkAnswer);
+    document.getElementById('new-exercise').addEventListener('click', generateExercise);
+    document.getElementById('difficulty').addEventListener('change', generateExercise);
+    document.getElementById('student-answer').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') checkAnswer();
+    });
+
+    generateExercise(); // Initialize first exercise
+  </script>
+
+</body>
+</html>
