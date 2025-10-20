@@ -282,6 +282,26 @@
 .calcul-block:hover {
   transform: translateY(-5px);
 }
+
+/* Effet hover spécifique aux blocs Option A & B */
+.calculs-option-block {
+  display: block;
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.calculs-option-block:hover {
+  transform: translateY(-5px);
+}
     }
   </style>
 </head>
@@ -334,11 +354,10 @@
   <h2 style="color: #4CAF50; font-size: 1.8em; margin-bottom: 20px;">Option A</h2>
 
   <!-- Bloc 1 -->
-  <a href="calculs-optiona-lineraire.html" 
-     style="display: block; width: 100%; background: white; border: 2px solid #4CAF50; border-radius: 8px; padding: 15px; margin-bottom: 15px; text-decoration: none; color: #4CAF50; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.3s; text-align: center; font-size: 1.2em; font-weight: bold;">
-    La gestion du linéaire<br>
-    <span style="font-size: 0.85em; color: #7f8c8d; font-weight: normal;">Option A</span>
-  </a>
+  <a href="calculs-optiona-lineraire.html" class="calculs-option-block" style="border: 2px solid #4CAF50; color: #4CAF50;">
+  La gestion du linéaire<br>
+  <span style="font-size: 0.85em; color: #7f8c8d; font-weight: normal;">Option A</span>
+</a>
 
   <!-- Bloc 2 -->
   <a href="calculs-optiona-stocks.html" 
