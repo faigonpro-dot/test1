@@ -118,10 +118,10 @@
     }
 
     /* --- Styles pour les exercices --- */
-    .cout { color: #800080; font-weight: bold; }     /* Mauve */
-    .prixAchat { color: #0000FF; font-weight: bold; } /* Bleu */
-    .remise { color: #FF8C00; font-weight: bold; }    /* Orange foncé */
-    .fraisLiv { color: #008000; font-weight: bold; }  /* Vert */
+    .prixAchat { color: #1E40AF; font-weight: bold; }   /* Bleu profond */
+    .remise { color: #F59E0B; font-weight: bold; }     /* Jaune vif */
+    .fraisLiv { color: #DC2626; font-weight: bold; }   /* Rouge vif */
+    .coutAchat { color: #16A34A; font-weight: bold; }  /* Vert émeraude */
     .correct-message { color: green; font-weight: bold; }
     .incorrect-message { color: red; font-weight: bold; }
 
@@ -137,10 +137,10 @@
       border-radius: 8px;
     }
 
-    .formula.cout { background-color: #f3e5f5; border-left: 4px solid #800080; }
-    .formula.prixAchat { background-color: #e3f2fd; border-left: 4px solid #0000FF; }
-    .formula.remise { background-color: #fff3e0; border-left: 4px solid #FF8C00; }
-    .formula.fraisLiv { background-color: #e8f5e8; border-left: 4px solid #008000; }
+    .formula.prixAchat { background-color: #dbeafe; border-left: 4px solid #1E40AF; }
+    .formula.remise { background-color: #fef3c7; border-left: 4px solid #F59E0B; }
+    .formula.fraisLiv { background-color: #fee2e2; border-left: 4px solid #DC2626; }
+    .formula.coutAchat { background-color: #dcfce7; border-left: 4px solid #16A34A; }
 
     .exercise-card {
       background: white;
@@ -288,17 +288,17 @@
     <div class="exercise-section">
       <div class="exercise-card">
         <h2>Formules à connaître</h2>
-        <div class="formula cout">
-          <p><span class="cout">Coût d'achat</span> = <span class="prixAchat">Prix d'achat</span> – <span class="remise">Remise</span> + <span class="fraisLiv">Frais de livraison</span></p>
-        </div>
         <div class="formula prixAchat">
-          <p><span class="prixAchat">Prix d'achat</span> = <span class="cout">Coût d'achat</span> + <span class="remise">Remise</span> – <span class="fraisLiv">Frais de livraison</span></p>
+          <p><span class="prixAchat">Prix d'achat</span> = <span class="coutAchat">Coût d'achat</span> + <span class="remise">Remise</span> – <span class="fraisLiv">Frais de livraison</span></p>
         </div>
         <div class="formula remise">
-          <p><span class="remise">Remise</span> = <span class="prixAchat">Prix d'achat</span> – <span class="cout">Coût d'achat</span> + <span class="fraisLiv">Frais de livraison</span></p>
+          <p><span class="remise">Remise</span> = <span class="prixAchat">Prix d'achat</span> – <span class="coutAchat">Coût d'achat</span> + <span class="fraisLiv">Frais de livraison</span></p>
         </div>
         <div class="formula fraisLiv">
-          <p><span class="fraisLiv">Frais de livraison</span> = <span class="cout">Coût d'achat</span> – <span class="prixAchat">Prix d'achat</span> + <span class="remise">Remise</span></p>
+          <p><span class="fraisLiv">Frais de livraison</span> = <span class="coutAchat">Coût d'achat</span> – <span class="prixAchat">Prix d'achat</span> + <span class="remise">Remise</span></p>
+        </div>
+        <div class="formula coutAchat">
+          <p><span class="coutAchat">Coût d'achat</span> = <span class="prixAchat">Prix d'achat</span> – <span class="remise">Remise</span> + <span class="fraisLiv">Frais de livraison</span></p>
         </div>
       </div>
 
