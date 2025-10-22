@@ -376,36 +376,42 @@
     }
 
     function generateExercise() {
-        const difficulty = document.getElementById('difficulty').value;
-        const exerciseType = Math.floor(Math.random() * 5); // 0 à 4
-        let pvHT, tauxTVA, montantTVA, pvTTC;
-        let useDecimals = difficulty !== 'easy';
+    const difficulty = document.getElementById('difficulty').value;
+    const exerciseType = Math.floor(Math.random() * 5); // 0 à 4
+    let pvHT, tauxTVA, montantTVA, pvTTC;
+    let useDecimals = difficulty !== 'easy';
 
-        // Génération réaliste
-        switch(difficulty) {
-            case 'easy':
-                pvHT = getRandomNumber(10, 100, false);
-                tauxTVA = getRandomNumber(5, 20, false); // 5%, 10%, 20%
-                break;
-            case 'medium':
-                pvHT = getRandomNumber(50, 500, true);
-                tauxTVA = getRandomNumber(5, 20, true); // 5.5%, 10.0%, 20.0%
-                break;
-            case 'hard':
-                pvHT = getRandomNumber(100, 1000, true);
-                tauxTVA = getRandomNumber(2.1, 20, true); // 2.1%, 5.5%, 10.0%, 20.0%
-                break;
-        }
+    // Liste des taux de TVA autorisés en France
+    const tauxTVAPossibles = [2.1, 5.5, 10, 20];
 
-        montantTVA = (pvHT * tauxTVA / 100);
-        pvTTC = pvHT + montantTVA;
-        if (useDecimals) {
-            montantTVA = Number(montantTVA.toFixed(2));
-            pvTTC = Number(pvTTC.toFixed(2));
-        } else {
-            montantTVA = Math.round(montantTVA);
-            pvTTC = Math.round(pvTTC);
-        }
+    // Génération réaliste
+    switch(difficulty) {
+        case 'easy':
+            pvHT = getRandomNumber(10, 100, false);
+            tauxTVA = tauxTVAPossibles[Math.floor(Math.random() * tauxTVAPossibles.length)];
+            break;
+        case 'medium':
+            pvHT = getRandomNumber(50, 500, true);
+            tauxTVA = tauxTVAPossibles[Math.floor(Math.random() * tauxTVAPossibles.length)];
+            break;
+        case 'hard':
+            pvHT = getRandomNumber(100, 1000, true);
+            tauxTVA = tauxTVAPossibles[Math.floor(Math.random() * tauxTVAPossibles.length)];
+            break;
+    }
+
+    montantTVA = (pvHT * tauxTVA / 100);
+    pvTTC = pvHT + montantTVA;
+    if (useDecimals) {
+        montantTVA = Number(montantTVA.toFixed(2));
+        pvTTC = Number(pvTTC.toFixed(2));
+    } else {
+        montantTVA = Math.round(montantTVA);
+        pvTTC = Math.round(pvTTC);
+    }
+
+    // ... (le reste du code reste identique)
+}
 
         let exerciseText = '';
         let answer = 0;
