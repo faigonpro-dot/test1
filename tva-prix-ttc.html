@@ -288,7 +288,10 @@
     <div class="exercise-section">
       <div class="exercise-card">
         <h2>Formules à connaître</h2>
-                <div class="formula montantTVA">
+        <div class="formula pvht">
+          <p><span class="pvht">Prix de Vente HT</span> × <span class="tauxTVA">Taux de TVA</span> = <span class="montantTVA">Montant de la TVA</span></p>
+        </div>
+        <div class="formula montantTVA">
           <p><span class="montantTVA">Montant de la TVA</span> = <span class="pvht">Prix de Vente HT</span> × <span class="tauxTVA">Taux de TVA</span></p>
         </div>
         <div class="formula pvttc">
@@ -373,42 +376,37 @@
     }
 
     function generateExercise() {
-    const difficulty = document.getElementById('difficulty').value;
-    const exerciseType = Math.floor(Math.random() * 5); // 0 à 4
-    let pvHT, tauxTVA, montantTVA, pvTTC;
-    let useDecimals = difficulty !== 'easy';
+        const difficulty = document.getElementById('difficulty').value;
+        const exerciseType = Math.floor(Math.random() * 5); // 0 à 4
+        let pvHT, tauxTVA, montantTVA, pvTTC;
+        let useDecimals = difficulty !== 'easy';
 
-    // Liste des taux de TVA autorisés en France
-    const tauxTVAPossibles = [2.1, 5.5, 10, 20];
+        // Liste des taux de TVA autorisés en France
+        const tauxTVAPossibles = [2.1, 5.5, 10, 20];
+        tauxTVA = tauxTVAPossibles[Math.floor(Math.random() * tauxTVAPossibles.length)];
 
-    // Génération réaliste
-    switch(difficulty) {
-        case 'easy':
-            pvHT = getRandomNumber(10, 100, false);
-            tauxTVA = tauxTVAPossibles[Math.floor(Math.random() * tauxTVAPossibles.length)];
-            break;
-        case 'medium':
-            pvHT = getRandomNumber(50, 500, true);
-            tauxTVA = tauxTVAPossibles[Math.floor(Math.random() * tauxTVAPossibles.length)];
-            break;
-        case 'hard':
-            pvHT = getRandomNumber(100, 1000, true);
-            tauxTVA = tauxTVAPossibles[Math.floor(Math.random() * tauxTVAPossibles.length)];
-            break;
-    }
+        // Génération du PV HT selon le niveau
+        switch(difficulty) {
+            case 'easy':
+                pvHT = getRandomNumber(10, 100, false);
+                break;
+            case 'medium':
+                pvHT = getRandomNumber(50, 500, true);
+                break;
+            case 'hard':
+                pvHT = getRandomNumber(100, 1000, true);
+                break;
+        }
 
-    montantTVA = (pvHT * tauxTVA / 100);
-    pvTTC = pvHT + montantTVA;
-    if (useDecimals) {
-        montantTVA = Number(montantTVA.toFixed(2));
-        pvTTC = Number(pvTTC.toFixed(2));
-    } else {
-        montantTVA = Math.round(montantTVA);
-        pvTTC = Math.round(pvTTC);
-    }
-
-    // ... (le reste du code reste identique)
-}
+        montantTVA = (pvHT * tauxTVA / 100);
+        pvTTC = pvHT + montantTVA;
+        if (useDecimals) {
+            montantTVA = Number(montantTVA.toFixed(2));
+            pvTTC = Number(pvTTC.toFixed(2));
+        } else {
+            montantTVA = Math.round(montantTVA);
+            pvTTC = Math.round(pvTTC);
+        }
 
         let exerciseText = '';
         let answer = 0;
@@ -446,7 +444,12 @@
             useDecimals
         };
 
-        document.getElementById('exercise-text').textContent = exerciseText;
+        // ✅ Injection sécurisée dans le DOM
+        const exerciseTextEl = document.getElementById('exercise-text');
+        if (exerciseTextEl) {
+            exerciseTextEl.textContent = exerciseText;
+        }
+
         document.getElementById('student-answer').value = '';
         document.getElementById('result-container').style.display = 'none';
         updateInputHint(useDecimals);
@@ -547,7 +550,8 @@
         if (e.key === 'Enter') checkAnswer();
     });
 
-    generateExercise(); // Initialize first exercise
+    // ✅ Initialisation au chargement
+    generateExercise();
   </script>
 
 </body>
