@@ -120,7 +120,7 @@
     /* --- Styles pour les exercices --- */
     .marge { color: #28a745; font-weight: bold; }     /* Vert */
     .paht { color: #007bff; font-weight: bold; }      /* Bleu */
-    .tauxMarge { color: #e83e8c; font-weight: bold; } /* Rose */
+    .tauxMarge { color: #D2691E; font-weight: bold; } /* Marron */
     .correct-message { color: green; font-weight: bold; }
     .incorrect-message { color: red; font-weight: bold; }
 
@@ -138,7 +138,7 @@
 
     .formula.marge { background-color: #d4edda; border-left: 4px solid #28a745; }
     .formula.paht { background-color: #dbeafe; border-left: 4px solid #007bff; }
-    .formula.tauxMarge { background-color: #f8d7da; border-left: 4px solid #e83e8c; }
+    .formula.tauxMarge { background-color: #ffe0b2; border-left: 4px solid #D2691E; }
 
     .exercise-card {
       background: white;
@@ -286,7 +286,13 @@
     <div class="exercise-section">
       <div class="exercise-card">
         <h2>Formules à connaître</h2>
-               <div class="formula tauxMarge">
+        <div class="formula marge">
+          <p><span class="marge">Marge</span> = <span class="paht">Prix de Vente HT</span> – <span class="paht">Prix d’Achat HT</span></p>
+        </div>
+        <div class="formula paht">
+          <p><span class="paht">Prix d’Achat HT</span> = <span class="paht">Prix de Vente HT</span> – <span class="marge">Marge</span></p>
+        </div>
+        <div class="formula tauxMarge">
           <p><span class="tauxMarge">Taux de marge</span> = (<span class="marge">Marge</span> ÷ <span class="paht">Prix d’Achat HT</span>) × 100%</p>
         </div>
         <div class="formula marge">
@@ -391,34 +397,34 @@
 
         pvHT = paHT + marge;
         tauxMarge = (marge / paHT) * 100;
-        if (useDecimals) {
-            tauxMarge = Number(tauxMarge.toFixed(2));
-        } else {
-            tauxMarge = Math.round(tauxMarge);
-        }
+        // ✅ Toujours arrondir à 2 chiffres après la virgule
+        tauxMarge = Number(tauxMarge.toFixed(2));
+        marge = Number(marge.toFixed(2));
+        paHT = Number(paHT.toFixed(2));
+        pvHT = Number(pvHT.toFixed(2));
 
         let exerciseText = '';
         let answer = 0;
 
         switch(exerciseType) {
             case 0:
-                exerciseText = `Un produit a un prix de vente HT de ${formatCurrency(pvHT, useDecimals)} et un prix d’achat HT de ${formatCurrency(paHT, useDecimals)}. Calculez la marge.`;
+                exerciseText = `Un produit a un prix de vente HT de ${formatCurrency(pvHT, true)} et un prix d’achat HT de ${formatCurrency(paHT, true)}. Calculez la marge.`;
                 answer = marge;
                 break;
             case 1:
-                exerciseText = `Un produit a un prix de vente HT de ${formatCurrency(pvHT, useDecimals)} et une marge de ${formatCurrency(marge, useDecimals)}. Calculez le prix d’achat HT.`;
+                exerciseText = `Un produit a un prix de vente HT de ${formatCurrency(pvHT, true)} et une marge de ${formatCurrency(marge, true)}. Calculez le prix d’achat HT.`;
                 answer = paHT;
                 break;
             case 2:
-                exerciseText = `Un produit a un prix d’achat HT de ${formatCurrency(paHT, useDecimals)} et une marge de ${formatCurrency(marge, useDecimals)}. Calculez le taux de marge.`;
+                exerciseText = `Un produit a un prix d’achat HT de ${formatCurrency(paHT, true)} et une marge de ${formatCurrency(marge, true)}. Calculez le taux de marge.`;
                 answer = tauxMarge;
                 break;
             case 3:
-                exerciseText = `Un produit a un prix d’achat HT de ${formatCurrency(paHT, useDecimals)} et un taux de marge de ${tauxMarge}%. Calculez la marge.`;
+                exerciseText = `Un produit a un prix d’achat HT de ${formatCurrency(paHT, true)} et un taux de marge de ${tauxMarge}%. Calculez la marge.`;
                 answer = marge;
                 break;
             case 4:
-                exerciseText = `Un produit a une marge de ${formatCurrency(marge, useDecimals)} et un taux de marge de ${tauxMarge}%. Calculez le prix d’achat HT.`;
+                exerciseText = `Un produit a une marge de ${formatCurrency(marge, true)} et un taux de marge de ${tauxMarge}%. Calculez le prix d’achat HT.`;
                 answer = paHT;
                 break;
         }
@@ -430,37 +436,37 @@
             marge,
             tauxMarge,
             answer,
-            useDecimals
+            useDecimals: true  // ✅ Toujours en mode décimal pour l'affichage
         };
 
         document.getElementById('exercise-text').textContent = exerciseText;
         document.getElementById('student-answer').value = '';
         document.getElementById('result-container').style.display = 'none';
-        updateInputHint(useDecimals);
+        updateInputHint(true); // ✅ Toujours afficher le hint pour 2 chiffres
     }
 
     function generateCorrectionDetails() {
-        const { type, pvHT, paHT, marge, tauxMarge, useDecimals } = currentExercise;
+        const { type, pvHT, paHT, marge, tauxMarge } = currentExercise;
         let correctionText = '';
         switch(type) {
             case 0:
                 correctionText = `
                     <p>Marge = Prix de Vente HT – Prix d’Achat HT</p>
-                    <p>Marge = ${formatCurrency(pvHT, useDecimals)} – ${formatCurrency(paHT, useDecimals)}</p>
-                    <p><strong>Marge = ${formatCurrency(marge, useDecimals)}</strong></p>
+                    <p>Marge = ${formatCurrency(pvHT, true)} – ${formatCurrency(paHT, true)}</p>
+                    <p><strong>Marge = ${formatCurrency(marge, true)}</strong></p>
                 `;
                 break;
             case 1:
                 correctionText = `
                     <p>Prix d’Achat HT = Prix de Vente HT – Marge</p>
-                    <p>Prix d’Achat HT = ${formatCurrency(pvHT, useDecimals)} – ${formatCurrency(marge, useDecimals)}</p>
-                    <p><strong>Prix d’Achat HT = ${formatCurrency(paHT, useDecimals)}</strong></p>
+                    <p>Prix d’Achat HT = ${formatCurrency(pvHT, true)} – ${formatCurrency(marge, true)}</p>
+                    <p><strong>Prix d’Achat HT = ${formatCurrency(paHT, true)}</strong></p>
                 `;
                 break;
             case 2:
                 correctionText = `
                     <p>Taux de marge = (Marge ÷ Prix d’Achat HT) × 100%</p>
-                    <p>Taux de marge = (${formatCurrency(marge, useDecimals)} ÷ ${formatCurrency(paHT, useDecimals)}) × 100%</p>
+                    <p>Taux de marge = (${formatCurrency(marge, true)} ÷ ${formatCurrency(paHT, true)}) × 100%</p>
                     <p>Taux de marge = ${(marge / paHT * 100).toFixed(2)}%</p>
                     <p><strong>Taux de marge = ${tauxMarge}%</strong></p>
                 `;
@@ -468,17 +474,17 @@
             case 3:
                 correctionText = `
                     <p>Marge = Prix d’Achat HT × (Taux de marge ÷ 100)</p>
-                    <p>Marge = ${formatCurrency(paHT, useDecimals)} × (${tauxMarge} ÷ 100)</p>
-                    <p>Marge = ${formatCurrency(paHT, useDecimals)} × ${tauxMarge/100}</p>
-                    <p><strong>Marge = ${formatCurrency(marge, useDecimals)}</strong></p>
+                    <p>Marge = ${formatCurrency(paHT, true)} × (${tauxMarge} ÷ 100)</p>
+                    <p>Marge = ${formatCurrency(paHT, true)} × ${tauxMarge/100}</p>
+                    <p><strong>Marge = ${formatCurrency(marge, true)}</strong></p>
                 `;
                 break;
             case 4:
                 correctionText = `
                     <p>Prix d’Achat HT = Marge ÷ (Taux de marge ÷ 100)</p>
-                    <p>Prix d’Achat HT = ${formatCurrency(marge, useDecimals)} ÷ (${tauxMarge} ÷ 100)</p>
-                    <p>Prix d’Achat HT = ${formatCurrency(marge, useDecimals)} ÷ ${tauxMarge/100}</p>
-                    <p><strong>Prix d’Achat HT = ${formatCurrency(paHT, useDecimals)}</strong></p>
+                    <p>Prix d’Achat HT = ${formatCurrency(marge, true)} ÷ (${tauxMarge} ÷ 100)</p>
+                    <p>Prix d’Achat HT = ${formatCurrency(marge, true)} ÷ ${tauxMarge/100}</p>
+                    <p><strong>Prix d’Achat HT = ${formatCurrency(paHT, true)}</strong></p>
                 `;
                 break;
         }
@@ -502,7 +508,7 @@
         resultContainer.style.display = 'block';
 
         const correctionText = generateCorrectionDetails();
-        const tolerance = currentExercise.useDecimals ? 0.01 : 0.5;
+        const tolerance = 0.01; // ✅ Toujours 0.01 car on arrondit à 2 chiffres
 
         if (Math.abs(studentAnswer - currentExercise.answer) < tolerance) {
             resultContainer.className = 'correct-answer';
