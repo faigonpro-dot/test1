@@ -194,6 +194,13 @@
     #result-container.correct-answer { background-color: #d4edda; border: 1px solid #c3e6cb; }
     #result-container.incorrect-answer { background-color: #f8d7da; border: 1px solid #f5c6cb; }
 
+    .precision-notice {
+      color: red;
+      font-style: italic;
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+
     .progress-section {
       max-width: 800px;
       margin: 0 auto;
@@ -343,6 +350,9 @@
           <option value="hard">Difficile (tableau - nombres décimaux)</option>
         </select>
         <div id="exercise-container"></div>
+        <p class="precision-notice">
+          Les résultats attendus devront être arrondis à 2 chiffres après la virgule, même pour les nombres entiers : 20 % → 20,00 %.
+        </p>
         <button id="new-exercise">Nouvel exercice</button>
       </div>
 
@@ -365,6 +375,11 @@
     let correctAnswers = 0;
     let totalAttempts = 0;
 
+    // Famille de produits : prêt-à-porter
+    const productFamilies = [
+      ["Tee-shirt", "Pull", "Chaussettes", "Pantalon", "Robe", "Veste", "Écharpe", "Bonnet", "Gants", "Jupe"]
+    ];
+
     let currentExercise = null;
 
     function getRandomNumber(min, max, useDecimals = false) {
@@ -372,14 +387,18 @@
         return useDecimals ? Number(num.toFixed(2)) : Math.round(num);
     }
 
-    function formatNumber(num, useDecimals) {
-        return useDecimals ? num.toFixed(2) : Math.round(num);
+    function formatToTwoDecimals(num) {
+        return num.toFixed(2).replace('.', ',');
     }
 
     function generateExercise() {
         const difficulty = document.getElementById('difficulty').value;
         const container = document.getElementById('exercise-container');
-        container.innerHTML = ''; // ✅ Vide le conteneur
+        container.innerHTML = '';
+
+        // Choisir une famille (ici une seule)
+        const family = productFamilies[0];
+        const names = [...family].sort(() => 0.5 - Math.random()).slice(0, 3); // 3 produits aléatoires
 
         if (difficulty === 'easy') {
             const part = getRandomNumber(10, 100, false);
@@ -389,24 +408,22 @@
                 type: 'easy',
                 part,
                 total,
-                answer: Number(answer.toFixed(2))
+                answer: parseFloat(answer.toFixed(2))
             };
 
             container.innerHTML = `
                 <p class="mb-2">Un produit a une part en nombre de ${part} sur un total de ${total}. Calculez la part en %.</p>
-                <input type="text" id="student-answer" placeholder="Votre réponse (ex: 20%)" class="border rounded px-3 py-2 w-full mb-2">
+                <input type="text" id="student-answer" placeholder="Votre réponse (ex: 20,00%)" class="border rounded px-3 py-2 w-full mb-2">
                 <button id="check-answer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Vérifier</button>
-                <p id="input-hint" class="text-xs text-gray-500 mt-1 italic">Entrez votre réponse avec le symbole % (ex: 20%)</p>
                 <div id="result-container" class="hidden mt-3 p-3 rounded"></div>
             `;
         } else {
-            // Tableau
             const useDecimals = difficulty === 'hard';
             const products = [];
             let totalQty = 0;
             for (let i = 0; i < 3; i++) {
                 const qty = getRandomNumber(10, 100, useDecimals);
-                products.push({ name: `Produit ${i+1}`, qty });
+                products.push({ name: names[i], qty });
                 totalQty += qty;
             }
             products.forEach(p => {
@@ -421,7 +438,7 @@
             };
 
             let tableHTML = `
-                <p class="mb-2">Complétez le tableau ci-dessous. Le total des quantités est à calculer par vous.</p>
+                <p class="mb-2">Complétez le tableau ci-dessous.</p>
                 <div class="table-container">
                     <table>
                         <thead>
@@ -433,7 +450,7 @@
                 tableHTML += `
                     <tr>
                         <td>${p.name}</td>
-                        <td>${formatNumber(p.qty, useDecimals)}</td>
+                        <td>${formatToTwoDecimals(p.qty)}</td>
                         <td><input type="text" class="table-input" data-index="${i}" placeholder="%"></td>
                     </tr>
                 `;
@@ -441,20 +458,18 @@
             tableHTML += `
                     <tr class="total-row">
                         <td>Total</td>
-                        <td>${formatNumber(totalQty, useDecimals)}</td>
-                        <td id="total-pct">0.00%</td>
+                        <td>${formatToTwoDecimals(totalQty)}</td>
+                        <td id="total-pct">0,00%</td>
                     </tr>
                 </tbody>
                 </table>
                 </div>
                 <button id="check-answer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-2">Vérifier</button>
-                <p id="input-hint" class="text-xs text-gray-500 mt-1 italic">Entrez vos réponses avec le symbole % (ex: 20%)</p>
                 <div id="result-container" class="hidden mt-3 p-3 rounded"></div>
             `;
 
             container.innerHTML = tableHTML;
 
-            // Ajoute les listeners pour le total
             document.querySelectorAll('.table-input').forEach(input => {
                 input.addEventListener('input', () => {
                     let sum = 0;
@@ -465,12 +480,11 @@
                             if (!isNaN(n)) sum += n;
                         }
                     });
-                    document.getElementById('total-pct').textContent = `${sum.toFixed(2)}%`;
+                    document.getElementById('total-pct').textContent = `${sum.toFixed(2).replace('.', ',')}%`;
                 });
             });
         }
 
-        // Réattache les événements
         document.getElementById('check-answer')?.addEventListener('click', checkAnswer);
     }
 
@@ -489,7 +503,8 @@
                 resultContainer.innerHTML = '<span class="incorrect-message">❌ Vous avez oublié le symbole %.</span>';
                 return;
             }
-            const value = parseFloat(input.replace('%', '').replace(',', '.'));
+            const clean = input.replace('%', '').replace(' ', '');
+            const value = parseFloat(clean.replace(',', '.'));
             if (isNaN(value)) {
                 resultContainer.innerHTML = '<span class="incorrect-message">❌ Format invalide.</span>';
                 return;
@@ -498,7 +513,7 @@
                 resultContainer.innerHTML = '<span class="correct-message">✅ Bravo !</span>';
                 correctAnswers++;
             } else {
-                resultContainer.innerHTML = `<span class="incorrect-message">❌ Faux. La bonne réponse est ${currentExercise.answer.toFixed(2)}%.</span>`;
+                resultContainer.innerHTML = `<span class="incorrect-message">❌ Faux. La bonne réponse est ${formatToTwoDecimals(currentExercise.answer)}%.</span>`;
             }
         } else {
             const inputs = document.querySelectorAll('.table-input');
@@ -514,7 +529,8 @@
                     allValid = false;
                     missingPercent = true;
                 } else {
-                    const n = parseFloat(v.replace('%', '').replace(',', '.'));
+                    const clean = v.replace('%', '').replace(' ', '');
+                    const n = parseFloat(clean.replace(',', '.'));
                     if (isNaN(n)) allValid = false;
                     else answers.push(n);
                 }
@@ -541,7 +557,7 @@
                 resultContainer.innerHTML = '<span class="correct-message">✅ Bravo !</span>';
                 correctAnswers++;
             } else {
-                resultContainer.innerHTML = '<span class="incorrect-message">❌ Une ou plusieurs réponses sont incorrectes.</span>';
+                resultContainer.innerHTML = `<span class="incorrect-message">❌ Une ou plusieurs réponses sont incorrectes. Exemple : ${formatToTwoDecimals(currentExercise.products[0].pct)}%.</span>`;
             }
         }
 
@@ -555,11 +571,10 @@
         document.getElementById('total-count').textContent = totalAttempts;
     }
 
-    // Initialisation
     document.getElementById('difficulty').addEventListener('change', generateExercise);
     document.getElementById('new-exercise').addEventListener('click', generateExercise);
 
-    generateExercise(); // ✅ Génère le premier exercice
+    generateExercise();
   </script>
 
 </body>
