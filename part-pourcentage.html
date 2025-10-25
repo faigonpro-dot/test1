@@ -375,9 +375,40 @@
     let correctAnswers = 0;
     let totalAttempts = 0;
 
-    // Famille de produits : prêt-à-porter
+    // Liste des familles de produits
     const productFamilies = [
-      ["Tee-shirt", "Pull", "Chaussettes", "Pantalon", "Robe", "Veste", "Écharpe", "Bonnet", "Gants", "Jupe"]
+      {
+        name: "Prêt-à-porter",
+        products: ["Tee-shirt", "Pull", "Chaussettes", "Pantalon", "Robe", "Veste", "Écharpe", "Bonnet", "Gants", "Jupe"]
+      },
+      {
+        name: "Alimentaire",
+        products: ["Pain", "Lait", "Fromage", "Yaourt", "Jambon", "Œufs", "Pâtes", "Riz", "Conserves", "Biscuits"]
+      },
+      {
+        name: "Électroménager",
+        products: ["Réfrigérateur", "Lave-linge", "Four", "Micro-ondes", "Aspirateur", "Cafetière", "Grille-pain", "Mixer", "Ventilateur", "Sèche-cheveux"]
+      },
+      {
+        name: "High-tech",
+        products: ["Smartphone", "Tablette", "Ordinateur", "Casque", "Clavier", "Souris", "Disque dur", "Chargeur", "Écouteurs", "Routeur"]
+      },
+      {
+        name: "Jouets",
+        products: ["Poupée", "Lego", "Voiture", "Dinosaure", "Ballon", "Puzzle", "Jeux vidéo", "Peluche", "Trotteur", "Trampoline"]
+      },
+      {
+        name: "Beauté & Hygiène",
+        products: ["Shampoing", "Gel douche", "Dentifrice", "Rasoir", "Crème", "Maquillage", "Déodorant", "Brosse à dents", "Serviette", "Parfum"]
+      },
+      {
+        name: "Maison & Jardin",
+        products: ["Balai", "Seau", "Arrosoir", "Bêche", "Râteau", "Plante", "Pot de fleur", "Coussin", "Nappe", "Assiette"]
+      },
+      {
+        name: "Sport & Loisirs",
+        products: ["Raquette", "Ballon", "Tennis", "Pagaie", "Tapis de yoga", "Sac à dos", "Montre", "Gourde", "Chaussures", "Short"]
+      }
     ];
 
     let currentExercise = null;
@@ -391,16 +422,19 @@
         return num.toFixed(2).replace('.', ',');
     }
 
+    function getRandomFamily() {
+        const index = Math.floor(Math.random() * productFamilies.length);
+        return productFamilies[index];
+    }
+
     function generateExercise() {
         const difficulty = document.getElementById('difficulty').value;
         const container = document.getElementById('exercise-container');
         container.innerHTML = '';
 
-        // Choisir une famille (ici une seule)
-        const family = productFamilies[0];
-        const names = [...family].sort(() => 0.5 - Math.random()).slice(0, 3); // 3 produits aléatoires
-
         if (difficulty === 'easy') {
+            const family = getRandomFamily();
+            const product = family.products[Math.floor(Math.random() * family.products.length)];
             const part = getRandomNumber(10, 100, false);
             const total = getRandomNumber(part, 200, false);
             const answer = (part / total) * 100;
@@ -408,22 +442,26 @@
                 type: 'easy',
                 part,
                 total,
-                answer: parseFloat(answer.toFixed(2))
+                answer: parseFloat(answer.toFixed(2)),
+                familyName: family.name,
+                productName: product
             };
 
             container.innerHTML = `
-                <p class="mb-2">Un produit a une part en nombre de ${part} sur un total de ${total}. Calculez la part en %.</p>
+                <p class="mb-2">${part} ${product} ont été vendus sur les ${total} ${family.name.toLowerCase()} vendus au total. Calculez la part en %.</p>
                 <input type="text" id="student-answer" placeholder="Votre réponse (ex: 20,00%)" class="border rounded px-3 py-2 w-full mb-2">
                 <button id="check-answer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Vérifier</button>
                 <div id="result-container" class="hidden mt-3 p-3 rounded"></div>
             `;
         } else {
             const useDecimals = difficulty === 'hard';
+            const family = getRandomFamily();
             const products = [];
             let totalQty = 0;
             for (let i = 0; i < 3; i++) {
                 const qty = getRandomNumber(10, 100, useDecimals);
-                products.push({ name: names[i], qty });
+                const product = family.products[Math.floor(Math.random() * family.products.length)];
+                products.push({ name: product, qty });
                 totalQty += qty;
             }
             products.forEach(p => {
@@ -434,11 +472,12 @@
                 type: 'table',
                 products,
                 totalQty,
-                useDecimals
+                useDecimals,
+                familyName: family.name
             };
 
             let tableHTML = `
-                <p class="mb-2">Complétez le tableau ci-dessous.</p>
+                <p class="mb-2">Complétez le tableau ci-dessous. Le total des quantités est à calculer par vous.</p>
                 <div class="table-container">
                     <table>
                         <thead>
