@@ -120,7 +120,7 @@
     /* --- Styles pour les exercices --- */
     .partNombre { color: #28a745; font-weight: bold; }     /* Vert */
     .total { color: #007bff; font-weight: bold; }          /* Bleu */
-    .partPct { color: #28a745; font-weight: bold; }        /* Vert (même que partNombre) */
+    .partPct { color: #28a745; font-weight: bold; }        /* Vert */
     .correct-message { color: green; font-weight: bold; }
     .incorrect-message { color: red; font-weight: bold; }
 
@@ -342,16 +342,7 @@
           <option value="medium">Moyen (tableau - nombres entiers)</option>
           <option value="hard">Difficile (tableau - nombres décimaux)</option>
         </select>
-        <div id="exercise-container">
-          <p id="exercise-text" class="mb-2"></p>
-          <input type="text" id="student-answer" placeholder="Votre réponse (ex: 20%)" pattern="[0-9.,]+%?" title="Entrez un nombre suivi du symbole %" step="0.01">
-          <button id="check-answer">Vérifier</button>
-          <p id="input-hint" class="text-xs text-gray-500 mt-1 italic"></p>
-        </div>
-        <div id="result-container">
-          <p id="result-text"></p>
-          <div id="correction-details" class="mt-2"></div>
-        </div>
+        <div id="exercise-container"></div>
         <button id="new-exercise">Nouvel exercice</button>
       </div>
 
@@ -374,310 +365,201 @@
     let correctAnswers = 0;
     let totalAttempts = 0;
 
-    let currentExercise = {
-        type: null,
-        partNombre: 0,
-        total: 0,
-        answer: 0,
-        useDecimals: false,
-        products: [],
-        totalCalculated: 0
-    };
-
-    function formatNumber(number, useDecimals) {
-        return useDecimals ? number.toFixed(2) : Math.round(number);
-    }
+    let currentExercise = null;
 
     function getRandomNumber(min, max, useDecimals = false) {
         const num = Math.random() * (max - min) + min;
         return useDecimals ? Number(num.toFixed(2)) : Math.round(num);
     }
 
-    function updateInputHint(useDecimals) {
-        const inputHint = document.getElementById('input-hint');
-        if (useDecimals) {
-            inputHint.textContent = "Entrez votre réponse avec 2 chiffres après la virgule et le symbole % (ex: 45.75%)";
-            document.getElementById('student-answer').setAttribute('pattern', '[0-9.,]+%?');
-        } else {
-            inputHint.textContent = "Entrez votre réponse avec le symbole % (ex: 20%)";
-            document.getElementById('student-answer').setAttribute('pattern', '[0-9]+%?');
-        }
+    function formatNumber(num, useDecimals) {
+        return useDecimals ? num.toFixed(2) : Math.round(num);
     }
 
     function generateExercise() {
         const difficulty = document.getElementById('difficulty').value;
-        let exerciseText = '';
-        let answer = 0;
-        let useDecimals = difficulty !== 'easy';
-
-        // Génération réaliste
-        switch(difficulty) {
-            case 'easy':
-                const partNombre = getRandomNumber(1, 100, false);
-                const total = getRandomNumber(partNombre, 200, false);
-                answer = (partNombre / total) * 100;
-                exerciseText = `Un produit a une part en nombre de ${partNombre} sur un total de ${total}. Calculez la part en %.`;
-                currentExercise = {
-                    type: 'easy',
-                    partNombre,
-                    total,
-                    answer: Number(answer.toFixed(2)),
-                    useDecimals: true
-                };
-                break;
-
-            case 'medium':
-                // Génération d'un tableau avec 3 produits
-                const products = [];
-                let total = 0;
-                for (let i = 0; i < 3; i++) {
-                    const quantity = getRandomNumber(10, 100, false);
-                    products.push({
-                        name: `Produit ${i+1}`,
-                        quantity,
-                        pct: 0
-                    });
-                    total += quantity;
-                }
-                // Calcul des parts en %
-                products.forEach(p => {
-                    p.pct = (p.quantity / total) * 100;
-                });
-
-                exerciseText = `Complétez le tableau ci-dessous. Le total des quantités est à calculer par vous.`;
-                currentExercise = {
-                    type: 'medium',
-                    products,
-                    total,
-                    useDecimals: false
-                };
-                break;
-
-            case 'hard':
-                // Génération d'un tableau avec 3 produits (décimaux)
-                const productsHard = [];
-                let totalHard = 0;
-                for (let i = 0; i < 3; i++) {
-                    const quantity = getRandomNumber(10, 100, true);
-                    productsHard.push({
-                        name: `Produit ${i+1}`,
-                        quantity,
-                        pct: 0
-                    });
-                    totalHard += quantity;
-                }
-                // Calcul des parts en %
-                productsHard.forEach(p => {
-                    p.pct = (p.quantity / totalHard) * 100;
-                });
-
-                exerciseText = `Complétez le tableau ci-dessous. Le total des quantités est à calculer par vous.`;
-                currentExercise = {
-                    type: 'hard',
-                    products: productsHard,
-                    total: totalHard,
-                    useDecimals: true
-                };
-                break;
-        }
-
-        // ✅ Injection sécurisée de l'énoncé
-        const exerciseTextEl = document.getElementById('exercise-text');
-        if (exerciseTextEl) {
-            exerciseTextEl.textContent = exerciseText;
-        }
-
-        document.getElementById('student-answer').value = '';
-        document.getElementById('result-container').style.display = 'none';
-        updateInputHint(useDecimals);
-
-        // Si c'est un tableau, on génère le HTML du tableau
-        if (currentExercise.type === 'medium' || currentExercise.type === 'hard') {
-            generateTable();
-        }
-    }
-
-    function generateTable() {
         const container = document.getElementById('exercise-container');
-        let tableHTML = `
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Désignation</th>
-                  <th>Quantité vendue</th>
-                  <th>Part en %</th>
-                </tr>
-              </thead>
-              <tbody>
-        `;
+        container.innerHTML = ''; // ✅ Vide le conteneur
 
-        currentExercise.products.forEach((product, index) => {
-            tableHTML += `
-              <tr>
-                <td>${product.name}</td>
-                <td>${formatNumber(product.quantity, currentExercise.useDecimals)}</td>
-                <td><input type="text" class="table-input" data-index="${index}" placeholder="%"></td>
-              </tr>
+        if (difficulty === 'easy') {
+            const part = getRandomNumber(10, 100, false);
+            const total = getRandomNumber(part, 200, false);
+            const answer = (part / total) * 100;
+            currentExercise = {
+                type: 'easy',
+                part,
+                total,
+                answer: Number(answer.toFixed(2))
+            };
+
+            container.innerHTML = `
+                <p class="mb-2">Un produit a une part en nombre de ${part} sur un total de ${total}. Calculez la part en %.</p>
+                <input type="text" id="student-answer" placeholder="Votre réponse (ex: 20%)" class="border rounded px-3 py-2 w-full mb-2">
+                <button id="check-answer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Vérifier</button>
+                <p id="input-hint" class="text-xs text-gray-500 mt-1 italic">Entrez votre réponse avec le symbole % (ex: 20%)</p>
+                <div id="result-container" class="hidden mt-3 p-3 rounded"></div>
             `;
-        });
-
-        tableHTML += `
-              <tr class="total-row">
-                <td>Total</td>
-                <td id="total-quantity">${formatNumber(currentExercise.total, currentExercise.useDecimals)}</td>
-                <td id="total-pct">0.00%</td>
-              </tr>
-            </tbody>
-            </table>
-          </div>
-        `;
-
-        // ✅ Remplace le contenu de l'exercice par le tableau
-        container.innerHTML = `
-          <p id="exercise-text" class="mb-2">${document.getElementById('exercise-text').textContent}</p>
-          ${tableHTML}
-          <button id="check-answer">Vérifier</button>
-          <p id="input-hint" class="text-xs text-gray-500 mt-1 italic"></p>
-        `;
-
-        // ✅ Ajoute les event listeners aux inputs du tableau
-        const inputs = document.querySelectorAll('.table-input');
-        inputs.forEach(input => {
-            input.addEventListener('input', updateTotalPct);
-        });
-    }
-
-    function updateTotalPct() {
-        let sumPct = 0;
-        const inputs = document.querySelectorAll('.table-input');
-        inputs.forEach(input => {
-            const value = input.value.trim();
-            if (value && value.endsWith('%')) {
-                const num = parseFloat(value.replace('%', '').replace(',', '.'));
-                if (!isNaN(num)) {
-                    sumPct += num;
-                }
+        } else {
+            // Tableau
+            const useDecimals = difficulty === 'hard';
+            const products = [];
+            let totalQty = 0;
+            for (let i = 0; i < 3; i++) {
+                const qty = getRandomNumber(10, 100, useDecimals);
+                products.push({ name: `Produit ${i+1}`, qty });
+                totalQty += qty;
             }
-        });
-        document.getElementById('total-pct').textContent = `${sumPct.toFixed(2)}%`;
+            products.forEach(p => {
+                p.pct = (p.qty / totalQty) * 100;
+            });
+
+            currentExercise = {
+                type: 'table',
+                products,
+                totalQty,
+                useDecimals
+            };
+
+            let tableHTML = `
+                <p class="mb-2">Complétez le tableau ci-dessous. Le total des quantités est à calculer par vous.</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Désignation</th><th>Quantité vendue</th><th>Part en %</th></tr>
+                        </thead>
+                        <tbody>
+            `;
+            products.forEach((p, i) => {
+                tableHTML += `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>${formatNumber(p.qty, useDecimals)}</td>
+                        <td><input type="text" class="table-input" data-index="${i}" placeholder="%"></td>
+                    </tr>
+                `;
+            });
+            tableHTML += `
+                    <tr class="total-row">
+                        <td>Total</td>
+                        <td>${formatNumber(totalQty, useDecimals)}</td>
+                        <td id="total-pct">0.00%</td>
+                    </tr>
+                </tbody>
+                </table>
+                </div>
+                <button id="check-answer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-2">Vérifier</button>
+                <p id="input-hint" class="text-xs text-gray-500 mt-1 italic">Entrez vos réponses avec le symbole % (ex: 20%)</p>
+                <div id="result-container" class="hidden mt-3 p-3 rounded"></div>
+            `;
+
+            container.innerHTML = tableHTML;
+
+            // Ajoute les listeners pour le total
+            document.querySelectorAll('.table-input').forEach(input => {
+                input.addEventListener('input', () => {
+                    let sum = 0;
+                    document.querySelectorAll('.table-input').forEach(i => {
+                        const v = i.value.trim();
+                        if (v && v.endsWith('%')) {
+                            const n = parseFloat(v.replace('%', '').replace(',', '.'));
+                            if (!isNaN(n)) sum += n;
+                        }
+                    });
+                    document.getElementById('total-pct').textContent = `${sum.toFixed(2)}%`;
+                });
+            });
+        }
+
+        // Réattache les événements
+        document.getElementById('check-answer')?.addEventListener('click', checkAnswer);
     }
 
     function checkAnswer() {
-        const studentAnswerInput = document.getElementById('student-answer').value.trim();
         const resultContainer = document.getElementById('result-container');
-        const resultText = document.getElementById('result-text');
-        const correctionDetails = document.getElementById('correction-details');
-
-        if (studentAnswerInput === '') {
-            alert("Veuillez entrer une réponse.");
-            return;
-        }
-
+        resultContainer.style.display = 'block';
         totalAttempts++;
 
-        resultContainer.style.display = 'block';
-
-        let isCorrect = false;
-        let correctionText = '';
-
         if (currentExercise.type === 'easy') {
-            // Vérifie si le résultat est correct (avec ou sans %)
-            const studentAnswer = parseFloat(studentAnswerInput.replace('%', '').replace(',', '.'));
-            const tolerance = currentExercise.useDecimals ? 0.01 : 0.5;
-
-            if (Math.abs(studentAnswer - currentExercise.answer) < tolerance) {
-                isCorrect = true;
-                correctionText = `<p>Bravo ! Votre réponse est correcte.</p>`;
+            const input = document.getElementById('student-answer')?.value.trim();
+            if (!input) {
+                resultContainer.innerHTML = '<span class="incorrect-message">Veuillez entrer une réponse.</span>';
+                return;
+            }
+            if (!input.includes('%')) {
+                resultContainer.innerHTML = '<span class="incorrect-message">❌ Vous avez oublié le symbole %.</span>';
+                return;
+            }
+            const value = parseFloat(input.replace('%', '').replace(',', '.'));
+            if (isNaN(value)) {
+                resultContainer.innerHTML = '<span class="incorrect-message">❌ Format invalide.</span>';
+                return;
+            }
+            if (Math.abs(value - currentExercise.answer) < 0.01) {
+                resultContainer.innerHTML = '<span class="correct-message">✅ Bravo !</span>';
+                correctAnswers++;
             } else {
-                // Vérifie si le symbole % est manquant
-                if (!studentAnswerInput.includes('%')) {
-                    correctionText = `<p>❌ Votre réponse est incorrecte. Vous avez oublié le symbole %.</p>`;
-                } else {
-                    correctionText = `<p>❌ Votre réponse est incorrecte.</p>`;
-                }
+                resultContainer.innerHTML = `<span class="incorrect-message">❌ Faux. La bonne réponse est ${currentExercise.answer.toFixed(2)}%.</span>`;
             }
         } else {
-            // Pour les tableaux
-            let allCorrect = true;
-            let missingPercent = false;
             const inputs = document.querySelectorAll('.table-input');
+            let allValid = true;
+            let missingPercent = false;
             const answers = [];
 
-            inputs.forEach((input, index) => {
-                const value = input.value.trim();
-                if (!value) {
-                    allCorrect = false;
-                } else if (!value.endsWith('%')) {
-                    allCorrect = false;
+            inputs.forEach(i => {
+                const v = i.value.trim();
+                if (!v) {
+                    allValid = false;
+                } else if (!v.endsWith('%')) {
+                    allValid = false;
                     missingPercent = true;
                 } else {
-                    const num = parseFloat(value.replace('%', '').replace(',', '.'));
-                    if (isNaN(num)) {
-                        allCorrect = false;
-                    } else {
-                        answers[index] = num;
-                    }
+                    const n = parseFloat(v.replace('%', '').replace(',', '.'));
+                    if (isNaN(n)) allValid = false;
+                    else answers.push(n);
                 }
             });
 
-            if (allCorrect) {
-                // Vérifie chaque réponse
-                for (let i = 0; i < currentExercise.products.length; i++) {
-                    const expected = currentExercise.products[i].pct;
-                    const student = answers[i];
-                    const tolerance = currentExercise.useDecimals ? 0.01 : 0.5;
-                    if (Math.abs(student - expected) > tolerance) {
-                        allCorrect = false;
-                        break;
-                    }
-                }
-            }
-
-            if (allCorrect) {
-                isCorrect = true;
-                correctionText = `<p>Bravo ! Votre tableau est correct.</p>`;
-            } else {
+            if (!allValid) {
                 if (missingPercent) {
-                    correctionText = `<p>❌ Votre réponse est incorrecte. N'oubliez pas le symbole % dans vos réponses.</p>`;
+                    resultContainer.innerHTML = '<span class="incorrect-message">❌ N’oubliez pas le symbole % dans toutes les cases.</span>';
                 } else {
-                    correctionText = `<p>❌ Votre réponse est incorrecte.</p>`;
+                    resultContainer.innerHTML = '<span class="incorrect-message">❌ Veuillez remplir toutes les cases correctement.</span>';
                 }
+                return;
+            }
+
+            let correct = true;
+            for (let i = 0; i < currentExercise.products.length; i++) {
+                if (Math.abs(answers[i] - currentExercise.products[i].pct) >= 0.01) {
+                    correct = false;
+                    break;
+                }
+            }
+
+            if (correct) {
+                resultContainer.innerHTML = '<span class="correct-message">✅ Bravo !</span>';
+                correctAnswers++;
+            } else {
+                resultContainer.innerHTML = '<span class="incorrect-message">❌ Une ou plusieurs réponses sont incorrectes.</span>';
             }
         }
 
-        if (isCorrect) {
-            resultContainer.className = 'correct-answer';
-            resultText.innerHTML = "<span class='correct-message'>Bravo ! Votre réponse est correcte.</span>";
-            correctAnswers++;
-        } else {
-            resultContainer.className = 'incorrect-answer';
-            resultText.innerHTML = "<span class='incorrect-message'>Votre réponse est incorrecte.</span> Voici la correction :";
-        }
-
-        correctionDetails.innerHTML = correctionText;
         updateProgress();
     }
 
     function updateProgress() {
-        const progressBar = document.getElementById('progress-bar');
-        const correctCount = document.getElementById('correct-count');
-        const totalCount = document.getElementById('total-count');
-        const progressPercentage = totalAttempts > 0 ? Math.round((correctAnswers / totalAttempts) * 100) : 0;
-        progressBar.style.width = `${progressPercentage}%`;
-        correctCount.textContent = correctAnswers;
-        totalCount.textContent = totalAttempts;
+        const progress = totalAttempts > 0 ? Math.round((correctAnswers / totalAttempts) * 100) : 0;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+        document.getElementById('correct-count').textContent = correctAnswers;
+        document.getElementById('total-count').textContent = totalAttempts;
     }
 
-    // Event listeners
-    document.getElementById('check-answer').addEventListener('click', checkAnswer);
-    document.getElementById('new-exercise').addEventListener('click', generateExercise);
+    // Initialisation
     document.getElementById('difficulty').addEventListener('change', generateExercise);
-    document.getElementById('student-answer').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') checkAnswer();
-    });
+    document.getElementById('new-exercise').addEventListener('click', generateExercise);
 
-    generateExercise(); // Initialize first exercise
+    generateExercise(); // ✅ Génère le premier exercice
   </script>
 
 </body>
