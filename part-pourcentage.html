@@ -481,7 +481,12 @@
                 break;
         }
 
-        document.getElementById('exercise-text').textContent = exerciseText;
+        // ✅ Injection sécurisée de l'énoncé
+        const exerciseTextEl = document.getElementById('exercise-text');
+        if (exerciseTextEl) {
+            exerciseTextEl.textContent = exerciseText;
+        }
+
         document.getElementById('student-answer').value = '';
         document.getElementById('result-container').style.display = 'none';
         updateInputHint(useDecimals);
@@ -528,7 +533,7 @@
           </div>
         `;
 
-        // Remplace le contenu de l'exercice par le tableau
+        // ✅ Remplace le contenu de l'exercice par le tableau
         container.innerHTML = `
           <p id="exercise-text" class="mb-2">${document.getElementById('exercise-text').textContent}</p>
           ${tableHTML}
@@ -536,7 +541,7 @@
           <p id="input-hint" class="text-xs text-gray-500 mt-1 italic"></p>
         `;
 
-        // Ajoute les event listeners aux inputs du tableau
+        // ✅ Ajoute les event listeners aux inputs du tableau
         const inputs = document.querySelectorAll('.table-input');
         inputs.forEach(input => {
             input.addEventListener('input', updateTotalPct);
@@ -586,94 +591,4 @@
                 correctionText = `<p>Bravo ! Votre réponse est correcte.</p>`;
             } else {
                 // Vérifie si le symbole % est manquant
-                if (!studentAnswerInput.includes('%')) {
-                    correctionText = `<p>❌ Votre réponse est incorrecte. Vous avez oublié le symbole %.</p>`;
-                } else {
-                    correctionText = `<p>❌ Votre réponse est incorrecte.</p>`;
-                }
-            }
-        } else {
-            // Pour les tableaux
-            let allCorrect = true;
-            let missingPercent = false;
-            const inputs = document.querySelectorAll('.table-input');
-            const answers = [];
-
-            inputs.forEach((input, index) => {
-                const value = input.value.trim();
-                if (!value) {
-                    allCorrect = false;
-                } else if (!value.endsWith('%')) {
-                    allCorrect = false;
-                    missingPercent = true;
-                } else {
-                    const num = parseFloat(value.replace('%', '').replace(',', '.'));
-                    if (isNaN(num)) {
-                        allCorrect = false;
-                    } else {
-                        answers[index] = num;
-                    }
-                }
-            });
-
-            if (allCorrect) {
-                // Vérifie chaque réponse
-                for (let i = 0; i < currentExercise.products.length; i++) {
-                    const expected = currentExercise.products[i].pct;
-                    const student = answers[i];
-                    const tolerance = currentExercise.useDecimals ? 0.01 : 0.5;
-                    if (Math.abs(student - expected) > tolerance) {
-                        allCorrect = false;
-                        break;
-                    }
-                }
-            }
-
-            if (allCorrect) {
-                isCorrect = true;
-                correctionText = `<p>Bravo ! Votre tableau est correct.</p>`;
-            } else {
-                if (missingPercent) {
-                    correctionText = `<p>❌ Votre réponse est incorrecte. N'oubliez pas le symbole % dans vos réponses.</p>`;
-                } else {
-                    correctionText = `<p>❌ Votre réponse est incorrecte.</p>`;
-                }
-            }
-        }
-
-        if (isCorrect) {
-            resultContainer.className = 'correct-answer';
-            resultText.innerHTML = "<span class='correct-message'>Bravo ! Votre réponse est correcte.</span>";
-            correctAnswers++;
-        } else {
-            resultContainer.className = 'incorrect-answer';
-            resultText.innerHTML = "<span class='incorrect-message'>Votre réponse est incorrecte.</span> Voici la correction :";
-        }
-
-        correctionDetails.innerHTML = correctionText;
-        updateProgress();
-    }
-
-    function updateProgress() {
-        const progressBar = document.getElementById('progress-bar');
-        const correctCount = document.getElementById('correct-count');
-        const totalCount = document.getElementById('total-count');
-        const progressPercentage = totalAttempts > 0 ? Math.round((correctAnswers / totalAttempts) * 100) : 0;
-        progressBar.style.width = `${progressPercentage}%`;
-        correctCount.textContent = correctAnswers;
-        totalCount.textContent = totalAttempts;
-    }
-
-    // Event listeners
-    document.getElementById('check-answer').addEventListener('click', checkAnswer);
-    document.getElementById('new-exercise').addEventListener('click', generateExercise);
-    document.getElementById('difficulty').addEventListener('change', generateExercise);
-    document.getElementById('student-answer').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') checkAnswer();
-    });
-
-    generateExercise(); // Initialize first exercise
-  </script>
-
-</body>
-</html>
+                if (!
