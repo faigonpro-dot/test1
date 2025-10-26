@@ -509,8 +509,8 @@
             tableHTML += `
                     <tr class="total-row">
                         <td>Total</td>
-                        <td id="total-n1">${totalN1}</td>
-                        <td id="total-n">${totalN}</td>
+                        <td><input type="number" id="total-n1" placeholder="?" min="1" class="w-full text-center border rounded p-1"></td>
+                        <td><input type="number" id="total-n" placeholder="?" min="1" class="w-full text-center border rounded p-1"></td>
                         <td id="total-evolution">0,00%</td>
                     </tr>
                 </tbody>
@@ -522,6 +522,7 @@
 
             container.innerHTML = tableHTML;
 
+            // Mise à jour du total % quand les parts changent
             document.querySelectorAll('.table-input').forEach(input => {
                 input.addEventListener('input', () => {
                     let sum = 0;
@@ -534,6 +535,19 @@
                     });
                     document.getElementById('total-evolution').textContent = `${sum.toFixed(2).replace('.', ',')}%`;
                 });
+            });
+
+            // Calcul du total des quantités
+            document.getElementById('total-n1').addEventListener('input', () => {
+                let sum = 0;
+                products.forEach(p => sum += p.qtyN1);
+                document.getElementById('total-n1').value = sum;
+            });
+
+            document.getElementById('total-n').addEventListener('input', () => {
+                let sum = 0;
+                products.forEach(p => sum += p.qtyN);
+                document.getElementById('total-n').value = sum;
             });
         }
 
@@ -588,28 +602,39 @@
                 }
             });
 
-            if (!allValid) {
-                if (missingPercent) {
-                    resultContainer.innerHTML = '<span class="incorrect-message">❌ N’oubliez pas le symbole % dans toutes les cases.</span>';
-                } else {
-                    resultContainer.innerHTML = '<span class="incorrect-message">❌ Veuillez remplir toutes les cases correctement.</span>';
-                }
-                return;
-            }
+            // ✅ Vérification des totaux
+            const totalN1Input = document.getElementById('total-n1')?.value.trim();
+            const totalNInput = document.getElementById('total-n')?.value.trim();
 
-            let correct = true;
-            for (let i = 0; i < currentExercise.products.length; i++) {
-                if (Math.abs(answers[i] - currentExercise.products[i].evolution) >= 0.01) {
-                    correct = false;
-                    break;
-                }
-            }
+            const totalN1Student = totalN1Input ? parseInt(totalN1Input) : null;
+            const totalNStudent = totalNInput ? parseInt(totalNInput) : null;
 
-            if (correct) {
-                resultContainer.innerHTML = '<span class="correct-message">✅ Bravo !</span>';
+            const totalCorrectAnswer = (totalN1Student === currentExercise.totalN1 && totalNStudent === currentExercise.totalN);
+
+            // ✅ Vérification des parts
+            const partsCorrect = allValid && answers.length === 3 && 
+                answers.every((a, i) => Math.abs(a - currentExercise.products[i].evolution) < 0.01);
+
+            // ✅ Calcul du taux d’évolution du total
+            const totalEvolution = ((totalNStudent - totalN1Student) / totalN1Student) * 100;
+
+            if (totalCorrectAnswer && partsCorrect) {
+                resultContainer.innerHTML = '<span class="correct-message">✅ Bravo ! Tout est correct.</span>';
                 correctAnswers++;
             } else {
-                resultContainer.innerHTML = `<span class="incorrect-message">❌ Une ou plusieurs réponses sont incorrectes. Exemple : ${formatToTwoDecimals(currentExercise.products[0].evolution)}%.</span>`;
+                let message = '<span class="incorrect-message">❌ ';
+                if (!totalCorrectAnswer) {
+                    message += 'Le total des quantités est incorrect. ';
+                }
+                if (!allValid) {
+                    if (missingPercent) {
+                        message += 'N’oubliez pas le symbole % dans les parts. ';
+                    } else {
+                        message += 'Vérifiez vos parts en %. ';
+                    }
+                }
+                message += '</span>';
+                resultContainer.innerHTML = message;
             }
         }
 
