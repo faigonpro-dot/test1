@@ -301,24 +301,27 @@
       </div>
 
       <!-- Exercice interactif -->
-      <div class="exercise-card">
-        <h2>Exercice interactif</h2>
-        <select id="difficulty" class="px-3 py-2 border rounded mb-3">
-          <option value="easy">Facile (formule 1)</option>
-          <option value="medium">Moyen (formules 1 et 2)</option>
-          <option value="hard">Difficile (formules 1 et 2)</option>
-        </select>
-        <div id="exercise-container">
-          <p id="exercise-text" class="mb-2"></p>
-          <input type="text" id="student-answer" placeholder="Votre réponse (ex: 20,00%)" class="border rounded px-3 py-2 w-full mb-2">
-          <button id="check-answer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Vérifier</button>
-        </div>
-        <div id="result-container">
-          <p id="result-text"></p>
-          <div id="correction-details" class="mt-2"></div>
-        </div>
-        <button id="new-exercise">Nouvel exercice</button>
-      </div>
+<div class="exercise-card">
+  <h2>Exercice interactif</h2>
+  <select id="difficulty" class="px-3 py-2 border rounded mb-3">
+    <option value="easy">Facile (formule 1)</option>
+    <option value="medium">Moyen (formules 1 et 2)</option>
+    <option value="hard">Difficile (formules 1 et 2)</option>
+  </select>
+  <div id="exercise-container">
+    <p id="exercise-text" class="mb-2"></p>
+    <input type="text" id="student-answer" placeholder="Votre réponse (ex: 20,00%)" class="border rounded px-3 py-2 w-full mb-2">
+    <button id="check-answer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Vérifier</button>
+  </div>
+  <div id="result-container">
+    <p id="result-text"></p>
+    <div id="correction-details" class="mt-2"></div>
+  </div>
+  <p class="precision-notice">
+    Les résultats attendus devront être arrondis à 2 chiffres après la virgule, même pour les nombres entiers : 20 % → 20,00 %.
+  </p>
+  <button id="new-exercise">Nouvel exercice</button>
+</div>
 
       <!-- Progression -->
       <div class="progress-section">
