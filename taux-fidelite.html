@@ -362,12 +362,14 @@
             // 50 % de chances d'utiliser la formule 2
             useFormula2 = Math.random() > 0.5;
             if (useFormula2) {
-                const totalClients = Math.floor(Math.random() * 100) + 50; // 50 à 150
-                const tauxFidelite = parseFloat((Math.random() * 40 + 10).toFixed(2)); // 10% à 50%
-                const clientsFideles = totalClients * (tauxFidelite / 100);
-                answer = Math.round(clientsFideles); // entier
-                exerciseText = `Un magasin a un taux de fidélité de ${formatToTwoDecimals(tauxFidelite)}% et un total de ${totalClients} clients. Calculez le nombre de clients fidèles.`;
-            } else {
+  const totalClients = Math.floor(Math.random() * 100) + 50; // entre 50 et 149
+  const clientsFideles = Math.floor(Math.random() * totalClients) + 1; // au moins 1, au plus totalClients
+  const tauxFideliteExact = (clientsFideles / totalClients) * 100;
+  const tauxFideliteAffiche = parseFloat(tauxFideliteExact.toFixed(2));
+
+  answer = clientsFideles; // entier
+  exerciseText = `Un magasin a un taux de fidélité de ${formatToTwoDecimals(tauxFideliteAffiche)}% et un total de ${totalClients} clients. Calculez le nombre de clients fidèles.`;
+}} else {
                 const clientsFideles = Math.floor(Math.random() * 90) + 10;
                 const totalClients = Math.floor(Math.random() * 100) + clientsFideles + 10;
                 answer = (clientsFideles / totalClients) * 100;
