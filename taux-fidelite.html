@@ -309,10 +309,11 @@
           <option value="hard">Difficile (formules 1 et 2)</option>
         </select>
         <div id="exercise-container">
-          <p id="exercise-text" class="mb-2"></p>
-          <input type="text" id="student-answer" placeholder="Votre réponse (ex: 20,00%)" class="border rounded px-3 py-2 w-full mb-2">
-          <button id="check-answer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Vérifier</button>
-        </div>
+  <p id="exercise-text" class="mb-2"></p>
+  <input type="text" id="student-answer" placeholder="Votre réponse (ex: 20,00%)" class="border rounded px-3 py-2 w-full mb-2">
+  <button id="check-answer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Vérifier</button>
+  <div id="dynamic-instruction" class="mt-2 text-sm"></div>
+</div>
         <div id="result-container">
           <p id="result-text"></p>
           <div id="correction-details" class="mt-2"></div>
@@ -344,40 +345,48 @@
     }
 
     function generateExercise() {
-        const difficulty = document.getElementById('difficulty').value;
-        let exerciseText = '';
-        let answer = 0;
-        let useFormula2 = false;
+    const difficulty = document.getElementById('difficulty').value;
+    let exerciseText = '';
+    let answer = 0;
+    let useFormula2 = false;
 
-        if (difficulty === 'easy') {
-            // Formule 1 uniquement
-            const clientsFideles = Math.floor(Math.random() * 90) + 10; // 10 à 100
-            const totalClients = Math.floor(Math.random() * 100) + clientsFideles + 10; // > clientsFideles
+    if (difficulty === 'easy') {
+        // Formule 1 uniquement → calcul du taux de fidélité
+        const clientsFideles = Math.floor(Math.random() * 90) + 10; // 10 à 100
+        const totalClients = Math.floor(Math.random() * 100) + clientsFideles + 10; // > clientsFideles
+        answer = (clientsFideles / totalClients) * 100;
+        exerciseText = `Un magasin a ${clientsFideles} clients fidèles sur un total de ${totalClients} clients. Calculez le taux de fidélité.`;
+        useFormula2 = false;
+    } else {
+        // 50 % de chances d'utiliser la formule 2
+        useFormula2 = Math.random() > 0.5;
+        if (useFormula2) {
+            const totalClients = Math.floor(Math.random() * 100) + 50; // 50 à 150
+            const tauxFidelite = parseFloat((Math.random() * 40 + 10).toFixed(2)); // 10% à 50%
+            const clientsFideles = totalClients * (tauxFidelite / 100);
+            answer = Math.round(clientsFideles); // entier
+            exerciseText = `Un magasin a un taux de fidélité de ${formatToTwoDecimals(tauxFidelite)}% et un total de ${totalClients} clients. Calculez le nombre de clients fidèles.`;
+        } else {
+            const clientsFideles = Math.floor(Math.random() * 90) + 10;
+            const totalClients = Math.floor(Math.random() * 100) + clientsFideles + 10;
             answer = (clientsFideles / totalClients) * 100;
             exerciseText = `Un magasin a ${clientsFideles} clients fidèles sur un total de ${totalClients} clients. Calculez le taux de fidélité.`;
-        } else {
-            // 50 % de chances d'utiliser la formule 2
-            useFormula2 = Math.random() > 0.5;
-            if (useFormula2) {
-                const totalClients = Math.floor(Math.random() * 100) + 50; // 50 à 150
-                const tauxFidelite = parseFloat((Math.random() * 40 + 10).toFixed(2)); // 10% à 50%
-                const clientsFideles = totalClients * (tauxFidelite / 100);
-                answer = Math.round(clientsFideles); // entier
-                exerciseText = `Un magasin a un taux de fidélité de ${formatToTwoDecimals(tauxFidelite)}% et un total de ${totalClients} clients. Calculez le nombre de clients fidèles.`;
-            } else {
-                const clientsFideles = Math.floor(Math.random() * 90) + 10;
-                const totalClients = Math.floor(Math.random() * 100) + clientsFideles + 10;
-                answer = (clientsFideles / totalClients) * 100;
-                exerciseText = `Un magasin a ${clientsFideles} clients fidèles sur un total de ${totalClients} clients. Calculez le taux de fidélité.`;
-            }
         }
-
-        document.getElementById('exercise-text').textContent = exerciseText;
-        document.getElementById('student-answer').value = '';
-        document.getElementById('result-container').style.display = 'none';
-        document.getElementById('answer-is-formula2').value = useFormula2 ? 'true' : 'false';
-        currentAnswer = Number(answer.toFixed(2));
     }
+
+    document.getElementById('exercise-text').textContent = exerciseText;
+    document.getElementById('student-answer').value = '';
+    document.getElementById('result-container').style.display = 'none';
+    currentAnswer = Number(answer.toFixed(2));
+
+    // ✅ Affichage de la consigne dynamique
+    const instructionDiv = document.getElementById('dynamic-instruction');
+    if (useFormula2) {
+        instructionDiv.innerHTML = '<p class="text-red-600 italic">Arrondir le résultat à l’entier le plus proche.</p>';
+    } else {
+        instructionDiv.innerHTML = '<p class="text-red-600 italic">Arrondir le taux à 2 chiffres après la virgule.</p>';
+    }
+}
 
     let currentAnswer = 0;
 
