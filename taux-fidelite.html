@@ -348,7 +348,7 @@
     const difficulty = document.getElementById('difficulty').value;
     let exerciseText = '';
     let answer = 0;
-    let useFormula2 = false;
+    let isCalculatingClients = false; // ✅ Nouvelle variable
 
     if (difficulty === 'easy') {
         // Formule 1 uniquement → calcul du taux de fidélité
@@ -356,21 +356,23 @@
         const totalClients = Math.floor(Math.random() * 100) + clientsFideles + 10; // > clientsFideles
         answer = (clientsFideles / totalClients) * 100;
         exerciseText = `Un magasin a ${clientsFideles} clients fidèles sur un total de ${totalClients} clients. Calculez le taux de fidélité.`;
-        useFormula2 = false;
+        isCalculatingClients = false;
     } else {
         // 50 % de chances d'utiliser la formule 2
-        useFormula2 = Math.random() > 0.5;
+        const useFormula2 = Math.random() > 0.5;
         if (useFormula2) {
             const totalClients = Math.floor(Math.random() * 100) + 50; // 50 à 150
             const tauxFidelite = parseFloat((Math.random() * 40 + 10).toFixed(2)); // 10% à 50%
             const clientsFideles = totalClients * (tauxFidelite / 100);
             answer = Math.round(clientsFideles); // entier
             exerciseText = `Un magasin a un taux de fidélité de ${formatToTwoDecimals(tauxFidelite)}% et un total de ${totalClients} clients. Calculez le nombre de clients fidèles.`;
+            isCalculatingClients = true; // ✅ On calcule un nombre de clients
         } else {
             const clientsFideles = Math.floor(Math.random() * 90) + 10;
             const totalClients = Math.floor(Math.random() * 100) + clientsFideles + 10;
             answer = (clientsFideles / totalClients) * 100;
             exerciseText = `Un magasin a ${clientsFideles} clients fidèles sur un total de ${totalClients} clients. Calculez le taux de fidélité.`;
+            isCalculatingClients = false;
         }
     }
 
@@ -381,69 +383,75 @@
 
     // ✅ Affichage de la consigne dynamique
     const instructionDiv = document.getElementById('dynamic-instruction');
-    if (useFormula2) {
+    if (isCalculatingClients) {
         instructionDiv.innerHTML = '<p class="text-red-600 italic">Arrondir le résultat à l’entier le plus proche.</p>';
     } else {
         instructionDiv.innerHTML = '<p class="text-red-600 italic">Arrondir le taux à 2 chiffres après la virgule.</p>';
     }
-}
 
+    // ✅ Stocke la variable pour la vérification
+    currentExercise = {
+        isCalculatingClients: isCalculatingClients
+    };
+}
     let currentAnswer = 0;
 
     function checkAnswer() {
-        const studentAnswerInput = document.getElementById('student-answer').value.trim();
-        const resultContainer = document.getElementById('result-container');
-        const resultText = document.getElementById('result-text');
+    const studentAnswerInput = document.getElementById('student-answer').value.trim();
+    const resultContainer = document.getElementById('result-container');
+    const resultText = document.getElementById('result-text');
 
-        if (studentAnswerInput === '') {
-            alert("Veuillez entrer une réponse.");
-            return;
-        }
-
-        totalAttempts++;
-
-        // Vérifie si c'est un pourcentage ou un nombre entier
-        const isPercentage = studentAnswerInput.includes('%');
-        let studentValue;
-
-        if (isPercentage) {
-            const clean = studentAnswerInput.replace('%', '').replace(' ', '').replace(',', '.');
-            studentValue = parseFloat(clean);
-        } else {
-            studentValue = parseFloat(studentAnswerInput.replace(',', '.'));
-        }
-
-        if (isNaN(studentValue)) {
-            resultText.innerHTML = "<span class='incorrect-message'>Format invalide.</span>";
-            resultContainer.style.display = 'block';
-            return;
-        }
-
-        const isFormula2 = document.getElementById('answer-is-formula2')?.value === 'true';
-        let isCorrect = false;
-
-        if (isFormula2) {
-            // Réponse attendue : nombre entier (clients fidèles)
-            isCorrect = Math.abs(studentValue - currentAnswer) < 0.5;
-        } else {
-            // Réponse attendue : pourcentage (taux de fidélité)
-            isCorrect = Math.abs(studentValue - currentAnswer) < 0.01;
-        }
-
-        resultContainer.style.display = 'block';
-        if (isCorrect) {
-            resultText.innerHTML = "<span class='correct-message'>✅ Bravo !</span>";
-            correctAnswers++;
-        } else {
-            if (isFormula2) {
-                resultText.innerHTML = `<span class='incorrect-message'>❌ Faux. La bonne réponse est ${Math.round(currentAnswer)} clients.</span>`;
-            } else {
-                resultText.innerHTML = `<span class='incorrect-message'>❌ Faux. La bonne réponse est ${formatToTwoDecimals(currentAnswer)}%.</span>`;
-            }
-        }
-
-        updateProgress();
+    if (studentAnswerInput === '') {
+        alert("Veuillez entrer une réponse.");
+        return;
     }
+
+    totalAttempts++;
+
+    // Vérifie si c'est un pourcentage ou un nombre entier
+    const isPercentage = studentAnswerInput.includes('%');
+    let studentValue;
+
+    if (isPercentage) {
+        const clean = studentAnswerInput.replace('%', '').replace(' ', '').replace(',', '.');
+        studentValue = parseFloat(clean);
+    } else {
+        studentValue = parseFloat(studentAnswerInput.replace(',', '.'));
+    }
+
+    if (isNaN(studentValue)) {
+        resultText.innerHTML = "<span class='incorrect-message'>Format invalide.</span>";
+        resultContainer.style.display = 'block';
+        return;
+    }
+
+    const isFormula2 = currentExercise.isCalculatingClients; // ✅ Utilise la variable stockée
+    let isCorrect = false;
+
+    if (isFormula2) {
+        // Réponse attendue : nombre entier (clients fidèles)
+        isCorrect = Math.abs(studentValue - currentAnswer) < 0.5;
+    } else {
+        // Réponse attendue : pourcentage (taux de fidélité)
+        isCorrect = Math.abs(studentValue - currentAnswer) < 0.01;
+    }
+
+    resultContainer.style.display = 'block';
+    if (isCorrect) {
+        resultText.innerHTML = "<span class='correct-message'>✅ Bravo !</span>";
+        correctAnswers++;
+    } else {
+        if (isFormula2) {
+            // ✅ Message en "clients"
+            resultText.innerHTML = `<span class='incorrect-message'>❌ Faux. La bonne réponse est ${Math.round(currentAnswer)} clients.</span>`;
+        } else {
+            // ✅ Message en "%"
+            resultText.innerHTML = `<span class='incorrect-message'>❌ Faux. La bonne réponse est ${formatToTwoDecimals(currentAnswer)}%.</span>`;
+        }
+    }
+
+    updateProgress();
+}
 
     function updateProgress() {
         const progressBar = document.getElementById('progress-bar');
